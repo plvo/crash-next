@@ -9,6 +9,45 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  VIP
+}
+
+model user {
+  id       String @id @default(uuid()) @db.Char(36)
+  email    String
+  password String
+
+  name  String
+  phone String
+  role  Role   @default(USER)
+
+  address String
+  cp      Int
+  city    String
+  country String
+
+  is_active   Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  publications publications[]
+}
+
+model publications {
+  id        String   @id @default(uuid()) @db.Char(36)
+  title     String
+  content   String
+  published Boolean  @default(false)
+
+  author_id String
+  author    user     @relation(fields: [author_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }

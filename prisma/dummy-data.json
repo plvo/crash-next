@@ -1,0 +1,57 @@
+{
+  "users": [
+    {
+      "email": "john@example.com",
+      "password": "password123",
+      "name": "John Doe",
+      "phone": "+1234567890",
+      "role": "USER",
+      "address": "123 Main St",
+      "cp": 12345,
+      "city": "Anytown",
+      "country": "USA",
+      "is_active": true
+    },
+    {
+      "email": "jane@example.com",
+      "password": "password456",
+      "name": "Jane Doe",
+      "phone": "+0987654321",
+      "role": "VIP",
+      "address": "456 Elm St",
+      "cp": 67890,
+      "city": "Othertown",
+      "country": "Canada",
+      "is_active": false
+    },
+    {
+      "email": "jason@example.com",
+      "password": "password789",
+      "name": "Jane Doe",
+      "phone": "+2314859562",
+      "role": "VIP",
+      "address": "678 Maple St",
+      "cp": 67890,
+      "city": "Metropolis",
+      "country": "USA",
+      "is_active": false
+    }
+  ],
+  "publications": [
+    {
+      "title": "First Post",
+      "content": "This is the content of the first post.",
+      "published": true
+    },
+    {
+      "title": "Second Post",
+      "content": "This is the content of the second post.",
+      "published": false
+    },
+    {
+        "content": "This is the content of the third post.",
+        "title": "Third Post",
+      "published": true
+    }
+  ]
+}

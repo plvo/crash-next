@@ -1,6 +1,81 @@
-// import NextAuth from "next-auth"
+import { PrismaClient } from "@prisma/client";
+import NextAuth, { Session, User, NextAuthOptions } from "next-auth";
+import type { JWT } from "next-auth/jwt";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcrypt";
 
-// const handler = NextAuth({
-// })
+export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 2592000 / 3, // 30 days / 3,
+  },
+  pages: {
+    signIn: "/",
+  },
+  callbacks: {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+      }
+      return token;
+    },
 
-// export { handler as GET, handler as POST }
+    async session({ session, token }: { session: Session; token: JWT }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.role = token.role;
+      }
+      return session;
+    },
+  },
+  providers: [
+    CredentialsProvider({
+      credentials: {
+        email: {},
+        password: {},
+      },
+      async authorize(credentials, req): Promise<User | null> {
+        const prisma = new PrismaClient();
+
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Please provide email and password");
+        }
+
+        try {
+          const userProfile = await prisma.user.findFirst({
+            where: {
+              email: credentials.email,
+            },
+          });
+
+          if (!userProfile) throw new Error("Email or password is incorrect");
+
+          const { id, email, password, role, is_active } = userProfile;
+
+          const isCorrectPassword = await bcrypt.compare(
+            credentials.password,
+            password
+          );
+
+          if (isCorrectPassword) {
+            if (!is_active) throw new Error("Account is not active");
+
+            return { email, id, role };
+          }
+
+          throw new Error("Mail ou mot de passe incorrect");
+        } catch (error: Error | unknown) {
+          console.error("An error occurred:", error);
+          throw new Error(error as string);
+        } finally {
+          await prisma.$disconnect();
+        }
+      },
+    }),
+  ],
+};
+
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };
