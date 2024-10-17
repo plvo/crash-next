@@ -1,11 +1,9 @@
-# next-starters
-A collection of Next.js starter templates for different types of projects
+# next-crud-start
+Next.js starter with bun, prisma, react-hook-form, next-auth, and shadcn/ui for key features
 
-# TODO
-- `select-starter.bat` (Windows)
-...
-### Starters
+### Used
 - next-auth
 - prisma
-- shadcn / daisyui
-...
+- shadcn
+- react-hook-form
+- tanstack-query

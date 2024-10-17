@@ -30,22 +30,24 @@ export default function Page() {
           includes a basic layout, authentication, (dynamic) routing, and other
           key features.
         </p>
-        <Link href={"https://github.com/plvo/next-dashboard"}>
-          <Button variant={"link"}>
-            Github Repository
-          </Button>
+        <Link href={"https://github.com/plvo/next-crud-starter"}>
+          <Button variant={"link"}>Github Repository</Button>
         </Link>
       </div>
       <div className="border p-4 shadow-lg rounded-xl">
-        <p className="md:text-xl font-mono opacity-90">
-          <span className="text-green-400">plvo@top</span>{" "}
-          <span className="text-blue-600">[22:05:09]</span>{" "}
-          [~/dev/next-starter]{" "}
-          <span className="text-green-500">[main <span className="text-red-500">*</span>]</span>
+        <div className="font-mono md:text-xl opacity-90">
+          <p>
+            <span className="text-green-400">plvo@top</span>{" "}
+            <span className="text-blue-600">[22:05:09]</span>{" "}
+            [~/dev/next-crud-starter]{" "}
+            <span className="text-green-500">
+              [main <span className="text-red-500">*</span>]
+            </span>
+          </p>
           <p className="text-left">
             <span className="text-blue-800">-&gt; $</span> tree src/app
           </p>
-        </p>
+        </div>
         <pre>{tree}</pre>
       </div>
 
