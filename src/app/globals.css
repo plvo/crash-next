@@ -76,3 +76,20 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+main {
+  @apply bg-background text-foreground;
+  @apply flex flex-col items-center min-h-screen;
+  @apply pt-20 pb-8 max-md:px-4 px-28;
+  @apply space-y-8
+}
+
+h1 {
+  @apply text-4xl font-bold text-center;
+  @apply max-sm:text-2xl max-md:text-3xl;
+}
+
+p {
+  @apply text-lg text-center;
+  @apply max-sm:text-sm;
+}
