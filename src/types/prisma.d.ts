@@ -5,3 +5,17 @@ type UserWithPublication = Prisma.userGetPayload<{
     publications: true;
   };
 }>;
+
+type PublicationWithAuthor = Prisma.publicationsGetPayload<{
+  include: {
+    author: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+      },
+    },
+  },
+}>;

@@ -2,6 +2,7 @@
 
 import { apiInternalError } from "@/lib/constants";
 import { ApiResponse } from "@/types/api";
+import { PublicationWithAuthor } from "@/types/prisma";
 import { PrismaClient, publications } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -32,9 +33,23 @@ const publicationGet = async (
   }
 };
 
-const publicationGetAll = async (): Promise<ApiResponse<publications[]>> => {
+const publicationGetAll = async (): Promise<
+  ApiResponse<PublicationWithAuthor[]>
+> => {
   try {
-    const publications = await prisma.publications.findMany();
+    const publications = await prisma.publications.findMany({
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            role: true,
+          },
+        },
+      },
+    });
     return { ok: true, data: publications };
   } catch (error) {
     console.error(error);

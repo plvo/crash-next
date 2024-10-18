@@ -34,13 +34,16 @@ export const InputField = <TFieldValues extends Record<string, string>>({
         }
 
         return (
-          <FormItem>
-            <FormLabel>{label}</FormLabel>
+          <FormItem className="space-y-1.5">
+            <FormLabel className="flex items-center justify-between">
+              {label}
+              <FormMessage className="max-sm:hidden text-sm" />
+            </FormLabel>
             <FormControl>
               <Input {...field} {...props} />
             </FormControl>
             {description && <FormDescription>{description}</FormDescription>}
-            <FormMessage />
+            <FormMessage className="sm:hidden text-xs text-left" />
           </FormItem>
         );
       }}

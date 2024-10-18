@@ -18,8 +18,8 @@ export async function middleware(req: NextRequest) {
     return Response.redirect(absolutePath("/"), 302);
   };
 
-  if (token) {
-    console.log("token", token);
+  if (token && pathname.startsWith("/signin")) {
+    return Response.redirect(absolutePath("/publications"), 302);
   };
 
   return null;
