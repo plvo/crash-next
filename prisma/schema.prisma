@@ -23,6 +23,8 @@ model user {
   email    String
   password String
 
+  profile_img String
+
   name  String
   phone String
   role  Role   @default(USER)

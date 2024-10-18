@@ -52,7 +52,8 @@ export const authOptions: NextAuthOptions = {
 
           if (!userProfile) throw new Error("Email or password is incorrect");
 
-          const { id, name, email, password, role, is_active } = userProfile;
+          const { id, name, email, profile_img, password, role, is_active } =
+            userProfile;
 
           const isCorrectPassword = await bcrypt.compare(
             credentials.password,
@@ -62,7 +63,7 @@ export const authOptions: NextAuthOptions = {
           if (isCorrectPassword) {
             if (!is_active) throw new Error("Account is not active");
 
-            return { name, email, id, role };
+            return { name, email, image: profile_img, id, role };
           }
 
           throw new Error("Email or password is incorrect");

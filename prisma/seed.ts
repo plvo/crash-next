@@ -10,6 +10,7 @@ enum Role {
 type DummyUser = {
   email: string;
   password: string;
+  profile_img: string;
   name: string;
   phone: string;
   role: Role;

@@ -15,6 +15,7 @@ type PublicationWithAuthor = Prisma.publicationsGetPayload<{
         email: true,
         phone: true,
         role: true,
+        profile_img: true,
       },
     },
   },

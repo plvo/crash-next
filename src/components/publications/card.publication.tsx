@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PublicationWithAuthor } from "@/types/prisma";
 import { User } from "next-auth";
+import Link from "next/link";
 
 export default function CardPublication({
   userSession,
@@ -16,7 +17,7 @@ export default function CardPublication({
   data: PublicationWithAuthor;
 }) {
   const { id, title, content, created_at, author } = data;
-  const { name } = author;
+  const { name, profile_img, id:id_author } = author;
 
   const isAccountPost = userSession.id === id;
 
@@ -39,15 +40,19 @@ export default function CardPublication({
         <div className="flex space-x-4">
           <Avatar className="w-12 h-12">
             <AvatarImage
-              src="/placeholder.svg?height=48&width=48"
+              src={profile_img}
               alt="@johndoe"
+              className=" object-cover"
             />
             <AvatarFallback>JD</AvatarFallback>
           </Avatar>
           <div className="flex-1 space-y-1">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold">{name}
-                {isAccountPost && <span className="text-xs text-foreground/50 ml-2">You</span>}
+              <h3 className="font-semibold">
+                {name}
+                {isAccountPost && (
+                  <span className="text-xs text-foreground/50 ml-2">You</span>
+                )}
               </h3>
               <p className="text-sm text-foreground/50">
                 {created_at.toUTCString()}
@@ -58,7 +63,7 @@ export default function CardPublication({
           </div>
         </div>
       </CardContent>
-      <CardFooter className="px-4 py-3 border-t">
+      <CardFooter className="flex justify-between items-center px-4 py-3 border-t">
         <Button
           variant="ghost"
           size="sm"
@@ -73,6 +78,15 @@ export default function CardPublication({
           <span className="text-sm font-medium">{likes}</span>
           <span className="sr-only">likes</span>
         </Button>
+        <Link href={"/user/" + id_author}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-foreground/40 transition-colors"
+          >
+            View profile
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );

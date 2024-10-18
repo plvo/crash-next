@@ -46,6 +46,7 @@ const publicationGetAll = async (): Promise<
             email: true,
             phone: true,
             role: true,
+            profile_img: true,
           },
         },
       },

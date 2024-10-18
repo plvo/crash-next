@@ -3,6 +3,7 @@
     {
       "email": "john@example.com",
       "password": "password123",
+      "profile_img": "https://s.abcnews.com/images/GMA/john-wick-ht-bb-230216_1676562305682_hpMain_1x1_992.jpg",
       "name": "John Doe",
       "phone": "+1234567890",
       "role": "USER",
@@ -13,9 +14,10 @@
       "is_active": true
     },
     {
-      "email": "jane@example.com",
+      "email": "judymoncada@example.com",
       "password": "password456",
-      "name": "Jane Doe",
+      "profile_img": "https://s24193.pcdn.co/wp-content/uploads/2017/03/who-is-judy-moncada-cristina-umana-entity.png",
+      "name": "Judy Moncada",
       "phone": "+0987654321",
       "role": "VIP",
       "address": "456 Elm St",
@@ -25,9 +27,10 @@
       "is_active": false
     },
     {
-      "email": "jason@example.com",
+      "email": "eliot@example.com",
       "password": "password789",
-      "name": "Jane Doe",
+      "profile_img": "https://upthrust.co/wp-content/uploads/2019/12/1_Universal-Content-Productions_Mr.-Robot.jpg",
+      "name": "Elliot Alderson",
       "phone": "+2314859562",
       "role": "VIP",
       "address": "678 Maple St",
