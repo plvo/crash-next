@@ -16,7 +16,7 @@ export default function ListPublications() {
 
   if (!session || isLoading) {
     return Array.from({ length: 3 }).map((_, index) => (
-      <Skeleton key={index} className="w-full h-40 max-w-lg rounded-xl" />
+      <Skeleton key={index} className="w-full h-40 rounded-xl" />
     ));
   }
 
@@ -25,10 +25,10 @@ export default function ListPublications() {
   }
 
   return (
-    <>
+    <section>
       {data.data.map((publication) => (
         <CardPublication key={publication.id} userSession={session.user} data={publication} />
       ))}
-    </>
+    </section>
   );
 }

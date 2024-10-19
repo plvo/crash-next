@@ -8,16 +8,23 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PublicationWithAuthor } from "@/types/prisma";
 import { User } from "next-auth";
 import Link from "next/link";
+import { publications, user } from "@prisma/client";
 
-export default function CardPublication({
+type PublicationData<T> = T extends PublicationWithAuthor ? T : publications;
+
+export default function CardPublication<T>({
   userSession,
   data,
+  authorData,
 }: {
   userSession: User;
-  data: PublicationWithAuthor;
+  data: PublicationData<T>;
+  authorData?: T extends PublicationWithAuthor ? never : user;
 }) {
-  const { id, title, content, created_at, author } = data;
-  const { name, profile_img, id:id_author } = author;
+  const { id, title, content, created_at } = data;
+  
+  const author = (data as PublicationWithAuthor).author ?? authorData;
+  const { name, profile_img, id: id_author } = author;
 
   const isAccountPost = userSession.id === id;
 
@@ -35,13 +42,13 @@ export default function CardPublication({
   };
 
   return (
-    <Card className="w-full max-w-lg rounded-xl">
+    <Card className="w-full rounded-xl">
       <CardContent className="p-4">
         <div className="flex space-x-4">
           <Avatar className="w-12 h-12">
             <AvatarImage
               src={profile_img}
-              alt="@johndoe"
+              alt={"@" + name}
               className=" object-cover"
             />
             <AvatarFallback>JD</AvatarFallback>
@@ -79,11 +86,7 @@ export default function CardPublication({
           <span className="sr-only">likes</span>
         </Button>
         <Link href={"/user/" + id_author}>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-foreground/40 transition-colors"
-          >
+          <Button variant="outline" className="text-foreground">
             View profile
           </Button>
         </Link>

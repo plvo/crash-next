@@ -22,7 +22,7 @@ const tree = `src/app
 
 export default function Page() {
   return (
-    <main>
+    <section>
       <div className="space-y-2 text-center">
         <h1 className="font-th">Welcome to your new template project!</h1>
         <p className="font-thin opacity-75">
@@ -51,14 +51,14 @@ export default function Page() {
         <pre>{tree}</pre>
       </div>
 
-      <div className="flex gap-4 items-center">
+      <div className="flex gap-4 justify-center items-center">
         <Link href={"/signin"}>
           <Button>/signin page</Button>
         </Link>
         <ButtonTheme />
       </div>
 
-      <footer className="fixed bottom-4">
+      <footer className="relative w-full">
         <p className="text-foreground/50">
           Made with <span className="text-foreground">❤️</span> by{" "}
           <Link
@@ -69,6 +69,6 @@ export default function Page() {
           </Link>
         </p>
       </footer>
-    </main>
+    </section>
   );
 }

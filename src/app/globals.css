@@ -80,17 +80,26 @@ body {
 main {
   @apply bg-background text-foreground;
   @apply flex flex-col items-center min-h-screen;
-  @apply mt-8;
-  @apply pt-20 py-8 max-md:px-2 px-28;
-  @apply space-y-8
+  @apply pt-24 pb-8; /* padding vertical */
+  @apply lg:px-24 max-lg:px-4 max-md:px-2;  /* padding responsive horizontal */
+}
+
+section {
+  @apply w-full lg:max-w-5xl;
+  @apply space-y-8;
 }
 
 h1 {
-  @apply text-4xl font-bold text-center;
-  @apply max-sm:text-2xl max-md:text-3xl;
+  @apply font-bold text-center; /* bold text */
+  @apply text-4xl max-sm:text-2xl max-md:text-3xl; /* responsive text size */
+  @apply mb-8; /* margin bottom */
 }
 
 p {
   @apply text-lg text-center;
   @apply max-sm:text-sm;
+}
+
+.link-string {
+  @apply underline-offset-4 hover:underline;
 }

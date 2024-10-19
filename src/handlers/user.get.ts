@@ -7,11 +7,27 @@ import { PrismaClient, user } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+// Type helper pour définir les champs supplémentaires
+type AdditionalFields = {
+  password: string;
+  created_at: Date;
+  updated_at: Date;
+};
+
+// Type conditionnel pour déterminer le type de retour en fonction des paramètres
+type UserReturnType<T extends boolean, U extends boolean> = T extends true
+  ? U extends true
+    ? UserWithPublication & AdditionalFields
+    : UserWithPublication
+  : U extends true
+  ? user & AdditionalFields
+  : Omit<user, keyof AdditionalFields>;
+
 const userGet = async <T extends boolean, U extends boolean>(
   id: string,
   withPublications?: T,
   withAll?: U
-): Promise<ApiResponse<user>> => {
+): Promise<ApiResponse<UserReturnType<T, U>>> => {
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -28,17 +44,19 @@ const userGet = async <T extends boolean, U extends boolean>(
         created_at: withAll,
         updated_at: withAll,
         publications: withPublications,
-      }
+      },
     });
 
-    if (!user) {
+    if (user) {
       return {
-        ok: false,
-        message: "user not found",
+        ok: true,
+        data: user as UserReturnType<T, U>,
       };
     }
-
-    return { ok: true, data: user };
+    return {
+      ok: false,
+      message: "user not found",
+    };
   } catch (error) {
     console.error(error);
     return apiInternalError;
