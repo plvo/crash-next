@@ -16,9 +16,11 @@ import { ButtonTheme } from "../button.theme";
 export function NavSheet({
   pathname,
   sessionUser,
+  PAGES_LIST,
 }: {
   pathname: string;
   sessionUser: User;
+  PAGES_LIST: PagesList[];
 }) {
   const { name } = sessionUser;
 
@@ -36,12 +38,16 @@ export function NavSheet({
             <SheetDescription>Welcome back {name}</SheetDescription>
           </div>
           <div className="w-full flex flex-col gap-4">
-            <LinkSheet pathname={pathname} href="/" label="Home" />
-            <LinkSheet
-              pathname={pathname}
-              href="/publications"
-              label="Publications"
-            />
+            {
+              PAGES_LIST.map((page, index) => (
+                <LinkSheet
+                  key={index}
+                  pathname={pathname}
+                  href={page.href}
+                  label={page.label}
+                />
+              ))
+            }
           </div>
         </SheetHeader>
 

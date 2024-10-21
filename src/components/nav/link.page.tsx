@@ -3,22 +3,26 @@ import { Button } from "../ui/button";
 
 export function LinkPage({
   pathname,
-  label,
-  href,
+  pageLink,
 }: {
   pathname: string;
-  label: string;
-  href: string;
+  pageLink: PageLink;
 }) {
-  const isCurrentPage = pathname.startsWith(href);
-  const textColor = isCurrentPage
+  const { href, label } = pageLink;
+  const isCurrentPage = pageLink.startWith
+    ? pathname.startsWith(href)
+    : href === pathname;
+  
+    const textColor = isCurrentPage
     ? "text-primary underline"
     : "text-foreground/50";
+
   return (
     <Link
       href={href}
-      className={textColor + " hover:underline underline-offset-4"}
+      className={textColor + " link-string flex items-center gap-1.5"}
     >
+      {pageLink.icon && pageLink.icon}
       {label}
     </Link>
   );
@@ -30,7 +34,7 @@ export function LinkSheet({
   href,
 }: {
   pathname: string;
-  label: string;
+  label: string | JSX.Element;
   href: string;
 }) {
   const isCurrentPage =
@@ -42,7 +46,7 @@ export function LinkSheet({
         variant={isCurrentPage ? "default" : "outline"}
         className="w-full"
       >
-        {label} 
+        <>{label}</>
       </Button>
     </Link>
   );

@@ -6,27 +6,24 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PublicationWithAuthor } from "@/types/prisma";
-import { User } from "next-auth";
 import Link from "next/link";
 import { publications, user } from "@prisma/client";
+import { StarFilledIcon } from "@radix-ui/react-icons";
 
 type PublicationData<T> = T extends PublicationWithAuthor ? T : publications;
 
 export default function CardPublication<T>({
-  userSession,
   data,
   authorData,
 }: {
-  userSession: User;
   data: PublicationData<T>;
   authorData?: T extends PublicationWithAuthor ? never : user;
 }) {
-  const { id, title, content, created_at } = data;
-  
-  const author = (data as PublicationWithAuthor).author ?? authorData;
-  const { name, profile_img, id: id_author } = author;
+  const { title, content, created_at } = data;
 
-  const isAccountPost = userSession.id === id;
+  const author = (data as PublicationWithAuthor).author ?? authorData;
+  const { name, pseudo, profile_img, role } = author;
+  const isVIP = role === "VIP";
 
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
   const [isLiked, setIsLiked] = useState(false);
@@ -55,11 +52,10 @@ export default function CardPublication<T>({
           </Avatar>
           <div className="flex-1 space-y-1">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold">
-                {name}
-                {isAccountPost && (
-                  <span className="text-xs text-foreground/50 ml-2">You</span>
-                )}
+              <h3
+                className={`flex items-center gap-1.5 font-semibold ${isVIP ? "text-yellow-500" : ""}`}>
+                {isVIP && <StarFilledIcon className="text-yellow-500" />}
+                {name} <span className="text-foreground/50">@{pseudo}</span>
               </h3>
               <p className="text-sm text-foreground/50">
                 {created_at.toUTCString()}
@@ -85,7 +81,7 @@ export default function CardPublication<T>({
           <span className="text-sm font-medium">{likes}</span>
           <span className="sr-only">likes</span>
         </Button>
-        <Link href={"/user/" + id_author}>
+        <Link href={"/user/" + pseudo}>
           <Button variant="outline" className="text-foreground">
             View profile
           </Button>

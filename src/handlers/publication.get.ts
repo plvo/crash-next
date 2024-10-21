@@ -43,6 +43,7 @@ const publicationGetAll = async (): Promise<
           select: {
             id: true,
             name: true,
+            pseudo: true,
             email: true,
             phone: true,
             role: true,
@@ -61,12 +62,32 @@ const publicationGetAll = async (): Promise<
 };
 
 const publicationGetByAuthor = async (
-  author_id: string
+  idOrPseudo: string
 ): Promise<ApiResponse<publications[]>> => {
   try {
+    const author = await prisma.user.findFirst({
+      where: {
+        OR: [
+          {
+            id: idOrPseudo,
+          },
+          {
+            pseudo: idOrPseudo,
+          },
+        ],
+      },
+    });
+
+    if (!author) {
+      return {
+        ok: false,
+        message: "Author not found",
+      };
+    }
+
     const publications = await prisma.publications.findMany({
       where: {
-        author_id,
+        author_id: author.id,
       },
     });
     return { ok: true, data: publications };

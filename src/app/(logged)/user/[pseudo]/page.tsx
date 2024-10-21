@@ -2,14 +2,14 @@
 
 import CardPublication from "@/components/publications/card.publication";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
 import HeaderProfile from "@/components/user/header.profile";
+import SkeletonUser from "@/components/user/skeleton.user";
 import { userGet } from "@/handlers/user.get";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 
-export default function Page({ params }: { params: { id_user: string } }) {
-  const { id_user } = params;
+export default function Page({ params }: { params: { pseudo: string } }) {
+  const { pseudo } = params;
 
   const { data: session } = useSession();
 
@@ -18,26 +18,11 @@ export default function Page({ params }: { params: { id_user: string } }) {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["user", id_user],
-    queryFn: () => userGet(id_user, true),
+    queryKey: ["user", pseudo],
+    queryFn: () => userGet(pseudo, true),
   });
 
-  if (isLoading)
-    return (
-      <section>
-        <header className="flex max-md:flex-col max-lg:justify-center items-center gap-4">
-          <Skeleton className="size-64 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="w-48 h-8" />
-            <Skeleton className="w-40 h-4" />
-            <Skeleton className="w-40 h-4" />
-          </div>
-        </header>
-        <Separator />
-        <Skeleton className="w-full h-40 rounded-xl" />
-        <Skeleton className="w-full h-40 rounded-xl" />
-      </section>
-    );
+  if (isLoading) return <SkeletonUser/>;
 
   if (isError || !session || !response?.ok) return <div>Error</div>;
 
@@ -48,7 +33,6 @@ export default function Page({ params }: { params: { id_user: string } }) {
       {response.data.publications.map((publication) => (
         <CardPublication
           key={publication.id}
-          userSession={session.user}
           data={publication}
           authorData={response.data}
         />

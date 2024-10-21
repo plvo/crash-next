@@ -12,6 +12,7 @@ type PublicationWithAuthor = Prisma.publicationsGetPayload<{
       select: {
         id: true,
         name: true,
+        pseudo: true,
         email: true,
         phone: true,
         role: true,

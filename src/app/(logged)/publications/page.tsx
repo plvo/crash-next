@@ -1,18 +1,15 @@
-import ListPublications from "@/components/publications/list-publications";
 import { Metadata } from "next";
+import ListPublications from "@/components/publications/list-publications";
 
-export const generateMetadata = (): Metadata => {
-  return {
-    title: "Publications | NextCrudStarter",
-    description: "Logged Layout",
-  };
-};
+export const metadata: Metadata = {
+  title: 'Publications',
+}
 
 export default function Page() {
   return (
-    <>
+    <section>
       <h1>Publications</h1>
       <ListPublications />
-    </>
+    </section>
   );
 }

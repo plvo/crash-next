@@ -1,6 +1,7 @@
 {
   "users": [
     {
+      "pseudo": "johnwick",
       "email": "john@example.com",
       "password": "password123",
       "profile_img": "https://s.abcnews.com/images/GMA/john-wick-ht-bb-230216_1676562305682_hpMain_1x1_992.jpg",
@@ -14,6 +15,7 @@
       "is_active": true
     },
     {
+      "pseudo": "judy",
       "email": "judymoncada@example.com",
       "password": "password456",
       "profile_img": "https://s24193.pcdn.co/wp-content/uploads/2017/03/who-is-judy-moncada-cristina-umana-entity.png",
@@ -27,6 +29,7 @@
       "is_active": false
     },
     {
+      "pseudo": "elliot",
       "email": "eliot@example.com",
       "password": "password789",
       "profile_img": "https://upthrust.co/wp-content/uploads/2019/12/1_Universal-Content-Productions_Mr.-Robot.jpg",

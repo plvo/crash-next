@@ -6,7 +6,6 @@ const absolutePath = (pathname: string): string => {
 };
 
 const NO_AUTH_PATHS = ["/", "/signin"];
-const AUTH_PATHS = ["/profile"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;

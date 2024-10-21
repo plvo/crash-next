@@ -24,11 +24,10 @@ export default function ListPublications() {
     return <div>Error</div>;
   }
 
-  return (
-    <section>
-      {data.data.map((publication) => (
-        <CardPublication key={publication.id} userSession={session.user} data={publication} />
-      ))}
-    </section>
-  );
+  return data.data.map((publication) => (
+    <CardPublication
+      key={publication.id}
+      data={publication}
+    />
+  ));
 }

@@ -24,18 +24,26 @@ type UserReturnType<T extends boolean, U extends boolean> = T extends true
   : Omit<user, keyof AdditionalFields>;
 
 const userGet = async <T extends boolean, U extends boolean>(
-  id: string,
+  idOrPseudo: string,
   withPublications?: T,
   withAll?: U
 ): Promise<ApiResponse<UserReturnType<T, U>>> => {
   try {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirst({
       where: {
-        id,
+        OR: [
+          {
+            id: idOrPseudo,
+          },
+          {
+            pseudo: idOrPseudo,
+          },
+        ],
       },
       select: {
         id: true,
         name: true,
+        pseudo: true,
         email: true,
         phone: true,
         role: true,

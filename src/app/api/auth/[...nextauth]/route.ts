@@ -17,6 +17,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
         token.id = user.id;
+        token.pseudo = user.pseudo;
         token.role = user.role;
       }
       return token;
@@ -25,6 +26,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }: { session: Session; token: JWT }) {
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.pseudo = token.pseudo;
         session.user.role = token.role;
       }
       return session;
@@ -52,7 +54,7 @@ export const authOptions: NextAuthOptions = {
 
           if (!userProfile) throw new Error("Email or password is incorrect");
 
-          const { id, name, email, profile_img, password, role, is_active } =
+          const { id, name, pseudo, email, profile_img, password, role, is_active } =
             userProfile;
 
           const isCorrectPassword = await bcrypt.compare(
@@ -63,7 +65,7 @@ export const authOptions: NextAuthOptions = {
           if (isCorrectPassword) {
             if (!is_active) throw new Error("Account is not active");
 
-            return { name, email, image: profile_img, id, role };
+            return { name, pseudo, email, image: profile_img, id, role };
           }
 
           throw new Error("Email or password is incorrect");

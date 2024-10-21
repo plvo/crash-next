@@ -20,6 +20,7 @@ enum Role {
 
 model user {
   id       String @id @default(uuid()) @db.Char(36)
+  pseudo   String @unique
   email    String
   password String
 

@@ -78,16 +78,14 @@ body {
 }
 
 main {
-  @apply bg-background text-foreground;
   @apply flex flex-col items-center min-h-screen;
-  @apply pt-24 pb-8; /* padding vertical */
+  @apply py-8; /* padding vertical */
   @apply lg:px-24 max-lg:px-4 max-md:px-2;  /* padding responsive horizontal */
 }
 
 section {
-  @apply w-full lg:max-w-5xl;
+  @apply w-full md:max-w-6xl lg:max-w-5xl xl:max-w-4xl;
   @apply space-y-8;
-  /* @apply bg-blue-400 */
 }
 
 h1 {
@@ -97,8 +95,8 @@ h1 {
 }
 
 p {
-  @apply text-lg text-center;
-  @apply max-sm:text-sm;
+  @apply text-center;
+  @apply max-sm:text-sm text-lg;
 }
 
 .link-string {
