@@ -22,13 +22,15 @@ export default function Page({ params }: { params: { pseudo: string } }) {
     queryFn: () => userGet(pseudo, true),
   });
 
-  if (isLoading) return <SkeletonUser/>;
+  if (isLoading) return <SkeletonUser />;
 
   if (isError || !session || !response?.ok) return <div>Error</div>;
 
+  const isUserProfile = session.user.pseudo === pseudo;
+
   return (
     <section>
-      <HeaderProfile data={response.data} />
+      <HeaderProfile data={response.data} isUserProfile={isUserProfile} />
       <Separator />
       {response.data.publications.map((publication) => (
         <CardPublication
