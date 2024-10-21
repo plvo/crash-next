@@ -87,6 +87,7 @@ main {
 section {
   @apply w-full lg:max-w-5xl;
   @apply space-y-8;
+  /* @apply bg-blue-400 */
 }
 
 h1 {
