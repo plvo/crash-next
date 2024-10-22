@@ -23,7 +23,7 @@ export function Providers({ children, ...props }: ThemeProviderProps) {
       <QueryClientProvider client={queryClient}>
         <NextThemesProvider defaultTheme="system" {...props}>
           {children}
-          <Toaster />
+          {/* <Toaster /> */}
         </NextThemesProvider>
       </QueryClientProvider>
     </SessionProvider>

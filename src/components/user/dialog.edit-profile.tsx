@@ -21,6 +21,8 @@ import SelectField from "@/components/form-fields/select.form-field";
 import ButtonSubmit from "@/components/form-fields/button.submit";
 import { userPostEdit } from "@/handlers/user.post";
 import { useMutation } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 const userSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
@@ -38,6 +40,8 @@ const userSchema = z.object({
 });
 
 export default function DialogEditProfile({ data }: { data: user }) {
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
   const { form, control, handleSubmit } = useFormZod(userSchema, data);
 
   const roleValues: SelectOption[] = Object.values($Enums.Role).map((role) => ({
@@ -45,23 +49,44 @@ export default function DialogEditProfile({ data }: { data: user }) {
     value: role,
   }));
 
-  const { isPending, mutateAsync } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: (values: z.infer<typeof userSchema>) =>
       userPostEdit(data.id, values),
+    onSuccess: () => {
+      console.log("Success");
+      setOpen(false);
+      toast({
+        title: "Profile updated",
+        description: "Your profile has been updated successfully",
+      });
+    },
+    onError: (error) => {
+      console.error("Failed to update profile:", error);
+      toast({
+        title: "Failed to update profile",
+        variant:"destructive",
+        description: (error as Error).message || "An error occurred while updating your profile",
+      });
+    }
   });
 
-  async function onSubmit(values: z.infer<typeof userSchema>) {
-    const ll = await mutateAsync(values);
-    console.log("isPending", isPending);
-    console.log("ll", ll);
-  }
+  const onSubmit = async (values: z.infer<typeof userSchema>) => {
+    try {
+      await mutateAsync(values);
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      toast({
+        title: "Failed to update profile",
+        variant:"destructive",
+        description: (error as Error).message || "An error occurred while updating your profile",
+      });
+    }
+  };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
-          Edit Profile {JSON.stringify(isPending)}
-        </Button>
+        <Button variant="outline">Edit Profile</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
@@ -70,7 +95,7 @@ export default function DialogEditProfile({ data }: { data: user }) {
               <DialogTitle>Edit profile</DialogTitle>
               <DialogDescription>
                 Make changes to your profile here. Click save when you&apos;re
-                done.
+                done. {JSON.stringify(isPending)}
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-4">
@@ -120,7 +145,7 @@ export default function DialogEditProfile({ data }: { data: user }) {
               />
             </div>
             <DialogFooter className="mt-4">
-              <ButtonSubmit label="Edit" />
+              <ButtonSubmit label="Edit" disabled={isPending} />
             </DialogFooter>
           </form>
         </Form>
