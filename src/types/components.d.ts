@@ -4,3 +4,8 @@ interface PageLink {
     icon?: JSX.Element;
     startWith?: string;
 }
+
+interface SelectOption {
+    value: string;
+    label: string;
+}

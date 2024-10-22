@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
-import { user } from "@prisma/client";
+import { $Enums, user } from "@prisma/client";
 // import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,9 +15,12 @@ import {
 } from "@/components/ui/dialog";
 import { z } from "zod";
 import useFormZod from "@/hooks/use-form-zod";
-import { Form } from "../ui/form";
-import { InputField } from "../input.form-field";
-import ButtonSubmit from "../button.submit";
+import { Form } from "@/components/ui/form";
+import InputField from "@/components/form-fields/input.form-field";
+import SelectField from "@/components/form-fields/select.form-field";
+import ButtonSubmit from "@/components/form-fields/button.submit";
+import { userPostEdit } from "@/handlers/user.post";
+import { useMutation } from "@tanstack/react-query";
 
 const userSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
@@ -36,14 +40,28 @@ const userSchema = z.object({
 export default function DialogEditProfile({ data }: { data: user }) {
   const { form, control, handleSubmit } = useFormZod(userSchema, data);
 
+  const roleValues: SelectOption[] = Object.values($Enums.Role).map((role) => ({
+    label: role,
+    value: role,
+  }));
+
+  const { isPending, mutateAsync } = useMutation({
+    mutationFn: (values: z.infer<typeof userSchema>) =>
+      userPostEdit(data.id, values),
+  });
+
   async function onSubmit(values: z.infer<typeof userSchema>) {
-    console.log(values);
+    const ll = await mutateAsync(values);
+    console.log("isPending", isPending);
+    console.log("ll", ll);
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
+        <Button variant="outline">
+          Edit Profile {JSON.stringify(isPending)}
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
@@ -84,20 +102,24 @@ export default function DialogEditProfile({ data }: { data: user }) {
                 control={control}
                 name="phone"
                 label="Phone"
-                placeholder="1234567890"
+                placeholder="1  234567890"
                 type="tel"
                 autoComplete="tel"
               />
-              <InputField
+              <SelectField
                 control={control}
                 name="role"
+                values={roleValues}
+                defaultValues={
+                  roleValues.map((role) => role.value).includes(data.role)
+                    ? data.role
+                    : undefined
+                }
                 label="Role"
-                placeholder="USER"
-                type="text"
-                autoComplete="role"
+                placeholder="Select a role"
               />
             </div>
-            <DialogFooter>
+            <DialogFooter className="mt-4">
               <ButtonSubmit label="Edit" />
             </DialogFooter>
           </form>

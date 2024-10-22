@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import type { Control, Path } from "react-hook-form";
 
-export const InputField = <TFieldValues extends Record<string, string>>({
+const InputField = <TFieldValues extends Record<string, string>>({
   control,
   name,
   label,
@@ -50,3 +50,5 @@ export const InputField = <TFieldValues extends Record<string, string>>({
     />
   );
 };
+
+export default InputField;
