@@ -1,33 +1,17 @@
 "use server";
 
 import { apiInternalError } from "@/lib/constants";
-import { ApiResponse } from "@/types/api";
+import { ApiResponse, ReturnUser } from "@/types/api";
 import { UserWithPublication } from "@/types/prisma";
 import { PrismaClient, user } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-// Type helper pour définir les champs supplémentaires
-type AdditionalFields = {
-  password: string;
-  created_at: Date;
-  updated_at: Date;
-};
-
-// Type conditionnel pour déterminer le type de retour en fonction des paramètres
-type UserReturnType<T extends boolean, U extends boolean> = T extends true
-  ? U extends true
-    ? UserWithPublication & AdditionalFields
-    : UserWithPublication
-  : U extends true
-  ? user & AdditionalFields
-  : Omit<user, keyof AdditionalFields>;
-
 const userGet = async <T extends boolean, U extends boolean>(
   idOrPseudo: string,
   withPublications?: T,
   withAll?: U
-): Promise<ApiResponse<UserReturnType<T, U>>> => {
+): Promise<ApiResponse<ReturnUser<T, U>>> => {
   try {
     const user = await prisma.user.findFirst({
       where: {
@@ -58,7 +42,7 @@ const userGet = async <T extends boolean, U extends boolean>(
     if (user) {
       return {
         ok: true,
-        data: user as UserReturnType<T, U>,
+        data: user as ReturnUser<T, U>,
       };
     }
     return {

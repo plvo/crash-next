@@ -16,13 +16,12 @@ import {
 import { z } from "zod";
 import useFormZod from "@/hooks/use-form-zod";
 import { Form } from "@/components/ui/form";
-import InputField from "@/components/form-fields/input.form-field";
-import SelectField from "@/components/form-fields/select.form-field";
-import ButtonSubmit from "@/components/form-fields/button.submit";
-import { userPostEdit } from "@/handlers/user.post";
-import { useMutation } from "@tanstack/react-query";
-import { useToast } from "@/hooks/use-toast";
+import InputField from "@/components/global/form-fields/input.form-field";
+import SelectField from "@/components/global/form-fields/select.form-field";
+import ButtonSubmit from "@/components/global/form-fields/button.submit";
 import { useState } from "react";
+import { SubmitHandler } from "react-hook-form";
+import { useUser } from "@/hooks/use-user";
 
 const userSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
@@ -40,7 +39,6 @@ const userSchema = z.object({
 });
 
 export default function DialogEditProfile({ data }: { data: user }) {
-  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const { form, control, handleSubmit } = useFormZod(userSchema, data);
 
@@ -49,39 +47,39 @@ export default function DialogEditProfile({ data }: { data: user }) {
     value: role,
   }));
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: (values: z.infer<typeof userSchema>) =>
-      userPostEdit(data.id, values),
-    onSuccess: () => {
-      console.log("Success");
-      setOpen(false);
-      toast({
-        title: "Profile updated",
-        description: "Your profile has been updated successfully",
-      });
-    },
-    onError: (error) => {
-      console.error("Failed to update profile:", error);
-      toast({
-        title: "Failed to update profile",
-        variant:"destructive",
-        description: (error as Error).message || "An error occurred while updating your profile",
-      });
-    }
-  });
+  const { updateUser, isUpdating, isMutError } = useUser(
+    data.id,
+    true,
+    true
+  ).mutation;
 
-  const onSubmit = async (values: z.infer<typeof userSchema>) => {
-    try {
-      await mutateAsync(values);
-    } catch (error) {
-      console.error("Failed to update profile:", error);
-      toast({
-        title: "Failed to update profile",
-        variant:"destructive",
-        description: (error as Error).message || "An error occurred while updating your profile",
-      });
-    }
-  };
+  // const { mutateAsync, isPending } = useMutation({
+  //   mutationFn: async (values: z.infer<typeof userSchema>) => {
+  //     const response = await userPostEdit(data.id, values);
+
+  //     if (response.ok) {
+  //       return response.data;
+  //     }
+  //   },
+  //   onSuccess: (data) => {
+  //     console.log("Success", data);
+  //     setOpen(false);
+  //     toast({
+  //       title: "Profile updated",
+  //       description: "Your profile has been updated successfully",
+  //     });
+  //   },
+  //   onError: (error) => {
+  //     console.error("Failed to update profile:", error);
+  //     toast({
+  //       title: "Failed to update profile",
+  //       variant: "destructive",
+  //       description:
+  //         (error as Error).message ||
+  //         "An error occurred while updating your profile",
+  //     });
+  //   },
+  // });
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -90,12 +88,16 @@ export default function DialogEditProfile({ data }: { data: user }) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form
+            onSubmit={handleSubmit(
+              updateUser as SubmitHandler<z.infer<typeof userSchema>>
+            )}
+          >
             <DialogHeader>
               <DialogTitle>Edit profile</DialogTitle>
               <DialogDescription>
                 Make changes to your profile here. Click save when you&apos;re
-                done. {JSON.stringify(isPending)}
+                done. {JSON.stringify(isMutError)}
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-4">
@@ -145,7 +147,7 @@ export default function DialogEditProfile({ data }: { data: user }) {
               />
             </div>
             <DialogFooter className="mt-4">
-              <ButtonSubmit label="Edit" disabled={isPending} />
+              <ButtonSubmit label="Edit" disabled={isUpdating} />
             </DialogFooter>
           </form>
         </Form>

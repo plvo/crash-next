@@ -4,7 +4,7 @@ import { user } from "@prisma/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import HoverItem from "@/components/hover.item";
+import HoverItem from "@/components/global/hover.item";
 import DialogEditProfile from "./dialog.edit-profile";
 
 export default function HeaderProfile({

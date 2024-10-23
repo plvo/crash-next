@@ -1,13 +1,13 @@
 "use client";
 
+import React from "react";
 import { User } from "next-auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ButtonTheme } from "../button.theme";
 import { NavSheet } from "./sheet.nav";
 import { LinkPage } from "./link.page";
-import ButtonLogout from "../button.signout";
-import React from "react";
+import ButtonTheme from "@/components/global/button.theme";
+import ButtonLogout from "@/components/global/button.signout";
 import { PAGES_LIST } from "@/lib/constants";
 
 function Nav({ sessionUser }: { sessionUser: User }) {
@@ -37,11 +37,7 @@ function Nav({ sessionUser }: { sessionUser: User }) {
         {/* Nav links */}
         <div className="flex items-center space-x-4 max-md:hidden">
           {pagesList.map((page, index) => (
-            <LinkPage
-              key={index}
-              pathname={pathname}
-              pageLink={page}
-            />
+            <LinkPage key={index} pathname={pathname} pageLink={page} />
           ))}
           <ButtonTheme />
           <ButtonLogout withLogo />

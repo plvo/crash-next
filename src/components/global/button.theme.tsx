@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
 
-export function ButtonTheme({ withText }: { withText?: boolean }) {
+export default function ButtonTheme({ withText }: { withText?: boolean }) {
   const { theme, setTheme } = useTheme();
   const [currentTheme, setCurrentTheme] = React.useState<
     "system" | "light" | "dark"
