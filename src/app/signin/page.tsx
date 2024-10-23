@@ -1,16 +1,16 @@
 import { Metadata } from "next";
 import FormSignIn from "@/components/signin/form.signin";
 
-export const generateMetadata = ():Metadata =>  {
+export const generateMetadata = (): Metadata => {
   return {
-    title: "Sign In | NextCrudStarter"
-  }
-}
+    title: "Sign In",
+  };
+};
 
 export default function Page() {
   return (
-    <main>
+    <section className="flex items-center justify-center h-[90vh]">
       <FormSignIn />
-    </main>
+    </section>
   );
 }

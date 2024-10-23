@@ -8,7 +8,8 @@ import { ReturnUser } from "@/types/api";
 export const useUser = <T extends boolean, U extends boolean>(
   id: string,
   withPublications: T = false as T,
-  withAll: U = false as U
+  withAll: U = false as U,
+  onSuccessMut?: () => void,
 ) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -54,7 +55,7 @@ export const useUser = <T extends boolean, U extends boolean>(
     onSuccess: (updatedUser) => {
       queryClient.setQueryData(["user", id], updatedUser);
       queryClient.invalidateQueries({ queryKey: ["user", id] });
-
+      onSuccessMut?.();
       toast({
         title: "Profile updated",
         description: "Your profile has been updated successfully",

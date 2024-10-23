@@ -50,36 +50,9 @@ export default function DialogEditProfile({ data }: { data: user }) {
   const { updateUser, isUpdating, isMutError } = useUser(
     data.id,
     true,
-    true
+    true,
+    () => setOpen(false)
   ).mutation;
-
-  // const { mutateAsync, isPending } = useMutation({
-  //   mutationFn: async (values: z.infer<typeof userSchema>) => {
-  //     const response = await userPostEdit(data.id, values);
-
-  //     if (response.ok) {
-  //       return response.data;
-  //     }
-  //   },
-  //   onSuccess: (data) => {
-  //     console.log("Success", data);
-  //     setOpen(false);
-  //     toast({
-  //       title: "Profile updated",
-  //       description: "Your profile has been updated successfully",
-  //     });
-  //   },
-  //   onError: (error) => {
-  //     console.error("Failed to update profile:", error);
-  //     toast({
-  //       title: "Failed to update profile",
-  //       variant: "destructive",
-  //       description:
-  //         (error as Error).message ||
-  //         "An error occurred while updating your profile",
-  //     });
-  //   },
-  // });
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

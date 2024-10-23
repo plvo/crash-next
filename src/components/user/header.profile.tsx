@@ -6,13 +6,14 @@ import { StarFilledIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import HoverItem from "@/components/global/hover.item";
 import DialogEditProfile from "./dialog.edit-profile";
+import { ReturnUser } from "@/types/api";
 
-export default function HeaderProfile({
+export default function HeaderProfile<T extends boolean>({
   data,
   isUserProfile,
 }: {
-  data: user;
-  isUserProfile: boolean;
+  data: ReturnUser<true, T>;
+  isUserProfile: T;
 }) {
   const { name, profile_img, role, email, phone } = data;
 
@@ -50,7 +51,7 @@ export default function HeaderProfile({
         </div>
       </div>
 
-      {isUserProfile && <DialogEditProfile data={data} />}
+      {isUserProfile && <DialogEditProfile data={data as user} />}
     </header>
   );
 }

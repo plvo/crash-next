@@ -53,7 +53,10 @@ export default function CardPublication<T>({
           <div className="flex-1 space-y-1">
             <div className="flex items-center justify-between">
               <h3
-                className={`flex items-center gap-1.5 font-semibold ${isVIP ? "text-yellow-500" : ""}`}>
+                className={`flex items-center gap-1.5 font-semibold ${
+                  isVIP ? "text-yellow-500" : ""
+                }`}
+              >
                 {isVIP && <StarFilledIcon className="text-yellow-500" />}
                 {name} <span className="text-foreground/50">@{pseudo}</span>
               </h3>

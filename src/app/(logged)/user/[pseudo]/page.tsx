@@ -5,12 +5,11 @@ import { Separator } from "@/components/ui/separator";
 import HeaderProfile from "@/components/user/header.profile";
 import SkeletonUser from "@/components/user/skeleton.user";
 import { useUser } from "@/hooks/use-user";
-import { publications } from "@prisma/client";
+import { publications, user } from "@prisma/client";
 import { useSession } from "next-auth/react";
 
 export default function Page({ params }: { params: { pseudo: string } }) {
   const { pseudo } = params;
-
   const { data: session } = useSession();
 
   const isUserProfile = session?.user.pseudo === pseudo;
@@ -35,7 +34,7 @@ export default function Page({ params }: { params: { pseudo: string } }) {
         <CardPublication
           key={publication.id}
           data={publication}
-          authorData={user}
+          authorData={user as user}
         />
       ))}
     </section>
