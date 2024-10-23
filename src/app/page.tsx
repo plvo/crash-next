@@ -1,6 +1,6 @@
-import { ButtonTheme } from "@/components/global/button.theme";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import ButtonTheme from "@/components/global/button.theme";
+import { Button } from "@/components/ui/button";
 
 const tree = `src/app
 ├── (logged) // Protected routes

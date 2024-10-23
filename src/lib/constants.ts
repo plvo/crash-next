@@ -1,6 +1,6 @@
 import { ApiErrorResponse } from "@/types/api";
-import AvatarProfile from "@/components/nav/avatar.profile";
 
+import AvatarProfile from "@/components/global/nav/avatar.profile";
 export const apiInternalError: ApiErrorResponse = {
   ok: false,
   message: "Internal Server Error",

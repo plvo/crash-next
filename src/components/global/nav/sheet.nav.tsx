@@ -10,8 +10,8 @@ import {
 import { MenuIcon } from "lucide-react";
 import { LinkSheet } from "./link.page";
 import { User } from "next-auth";
-import ButtonLogout from "../button.signout";
-import { ButtonTheme } from "../button.theme";
+import ButtonLogout from "@/components/global/button.signout";
+import ButtonTheme from "@/components/global/button.theme";
 
 export function NavSheet({
   pathname,
@@ -20,7 +20,7 @@ export function NavSheet({
 }: {
   pathname: string;
   sessionUser: User;
-  PAGES_LIST: PagesList[];
+  PAGES_LIST: PageLink[];
 }) {
   const { name } = sessionUser;
 

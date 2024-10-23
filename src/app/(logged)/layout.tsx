@@ -1,6 +1,6 @@
 import React from "react";
 import { getServerSession } from "next-auth";
-import NavMargin from "@/components/nav/nav";
+import NavMargin from "@/components/global/nav/nav";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 
 export default async function RootLayout({
