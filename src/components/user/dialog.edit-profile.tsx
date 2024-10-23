@@ -22,6 +22,8 @@ import ButtonSubmit from "@/components/global/form-fields/button.submit";
 import { useState } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { useUser } from "@/hooks/use-user";
+import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
 
 const userSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
@@ -40,6 +42,7 @@ const userSchema = z.object({
 
 export default function DialogEditProfile({ data }: { data: user }) {
   const [open, setOpen] = useState(false);
+  const s = useSession();
   const { form, control, handleSubmit } = useFormZod(userSchema, data);
 
   const roleValues: SelectOption[] = Object.values($Enums.Role).map((role) => ({
@@ -47,11 +50,31 @@ export default function DialogEditProfile({ data }: { data: user }) {
     value: role,
   }));
 
+  const updateSession = (data:user) => {
+    const {id, email, profile_img:image, name, pseudo, role} = data
+    
+    // TODO
+    const newSession: Session = { 
+      user: {
+        id,
+        pseudo,
+        role
+      }
+    }}
+  }
+
   const { updateUser, isUpdating, isMutError } = useUser(
     data.id,
     true,
     true,
-    () => setOpen(false)
+    async () => {
+      
+      const updateSession = s.data
+      console.log("dadaz", data); 
+      // const updateSession = await update(data);
+      console.log("update", updateSession);
+      setOpen(false);
+    }
   ).mutation;
 
   return (

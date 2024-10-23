@@ -7,13 +7,15 @@ import { PrismaClient, user } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const userPostEdit = async <T extends boolean, U extends boolean>(
+export const userPostUpdate = async <T extends boolean, U extends boolean>(
   id: string,
   data: Partial<user>,
   withPublications: T = false as T,
   withAll: U = false as U
 ): Promise<ApiResponse<ReturnUser<T, U>>> => {
   try {
+    console.log("data", data);
+    console.log(id);
     const user = await prisma.user.update({
       where: {
         id,

@@ -1,9 +1,9 @@
 "use client";
 
 import CardPublication from "@/components/publications/card.publication";
-import { Separator } from "@/components/ui/separator";
 import HeaderProfile from "@/components/user/header.profile";
 import SkeletonUser from "@/components/user/skeleton.user";
+import { Separator } from "@/components/ui/separator";
 import { useUser } from "@/hooks/use-user";
 import { publications, user } from "@prisma/client";
 import { useSession } from "next-auth/react";
@@ -15,7 +15,7 @@ export default function Page({ params }: { params: { pseudo: string } }) {
   const isUserProfile = session?.user.pseudo === pseudo;
 
   const { user, isLoading, isQueryError, queryError } = useUser(
-    session?.user.id as string,
+    pseudo,
     true,
     isUserProfile
   ).query;

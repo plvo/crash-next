@@ -1,5 +1,5 @@
 import { userGet } from "@/handlers/user.get";
-import { userPostEdit } from "@/handlers/user.post";
+import { userPostUpdate } from "@/handlers/user.post";
 import { user } from "@prisma/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "./use-toast";
@@ -9,7 +9,7 @@ export const useUser = <T extends boolean, U extends boolean>(
   id: string,
   withPublications: T = false as T,
   withAll: U = false as U,
-  onSuccessMut?: () => void,
+  onSuccessMut?: () => Promise<void>
 ) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -22,7 +22,7 @@ export const useUser = <T extends boolean, U extends boolean>(
   } = useQuery({
     queryKey: ["user", id],
     queryFn: async () => {
-      const response = await userGet(id, withPublications, withAll);
+      const response = await userGet(id, withPublications, withAll, true);
 
       if (!response.ok) {
         throw new Error(response.message || "Failed to fetch user profile");
@@ -39,7 +39,7 @@ export const useUser = <T extends boolean, U extends boolean>(
     error: mutError,
   } = useMutation({
     mutationFn: async (newData: Partial<user>): Promise<ReturnUser<T, U>> => {
-      const response = await userPostEdit(
+      const response = await userPostUpdate(
         id,
         newData,
         withPublications,
@@ -52,10 +52,10 @@ export const useUser = <T extends boolean, U extends boolean>(
 
       return response.data as ReturnUser<T, U>;
     },
-    onSuccess: (updatedUser) => {
+    onSuccess: async (updatedUser) => {
       queryClient.setQueryData(["user", id], updatedUser);
       queryClient.invalidateQueries({ queryKey: ["user", id] });
-      onSuccessMut?.();
+      await onSuccessMut?.();
       toast({
         title: "Profile updated",
         description: "Your profile has been updated successfully",

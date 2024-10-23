@@ -41,7 +41,7 @@ export default function HeaderProfile<T extends boolean>({
               />
             )}
           </h2>
-          <Link 
+          <Link
             href={"mailto:" + email}
             className="link-string text-foreground/50"
           >
