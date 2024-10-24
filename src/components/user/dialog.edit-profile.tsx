@@ -4,7 +4,6 @@
 import { useState } from "react";
 import { $Enums, user } from "@prisma/client";
 import { z } from "zod";
-// import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,17 +23,20 @@ import { useUser } from "@/hooks/use-user";
 import { getChangedFields } from "@/lib/form";
 
 const userSchema = z.object({
-  name: z.string().min(3, "Name must be at least 3 characters"),
+  name: z
+    .string()
+    .min(3, "Name must be at least 3 characters")
+    .max(50, "Name must not exceed 50 characters"),
   pseudo: z
     .string()
     .min(3, "Pseudo must be at least 3 characters")
+    .max(20, "Pseudo must not exceed 20 characters")
     .regex(
       /^[a-zA-Z0-9]+$/,
       "Pseudo must not contain spaces or special characters"
     ),
   email: z.string().email({ message: "Invalid email" }),
-  phone: z.string().min(3, "Phone number must be 10 digits"),
-  //   profile_img: z.string().url(),
+  phone: z.string().min(3, "Phone number must be 3 digits"),
   role: z.enum(["USER", "VIP"]),
 });
 
@@ -47,12 +49,10 @@ export default function DialogEditProfile({ data }: { data: user }) {
     value: role,
   }));
 
-  const {
-    form,
-    control,
-    handleSubmit,
-    formState,
-  } = useFormZod(userSchema, data);
+  const { form, control, handleSubmit, formState } = useFormZod(
+    userSchema,
+    data
+  );
 
   const { updateUser, isUpdating } = useUser(data.pseudo, true, true).mutation;
 
@@ -61,7 +61,9 @@ export default function DialogEditProfile({ data }: { data: user }) {
       if (!formState.isDirty) return; // check if form has been changed
       const changedFields = getChangedFields(data, newData); // get changed fields
       if (Object.keys(changedFields).length === 0) return; // check if there are changes
+
       await updateUser(changedFields);
+      form.reset({ ...data, ...changedFields });
       setOpen(false);
     } catch (error) {
       console.error(error);
