@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PrismaClient } from "@prisma/client";
 import NextAuth, { Session, User, NextAuthOptions } from "next-auth";
 import type { JWT } from "next-auth/jwt";
@@ -14,11 +15,32 @@ export const authOptions: NextAuthOptions = {
     signIn: "/",
   },
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: User }) {
+    async jwt({
+      token,
+      user,
+      trigger,
+      session,
+    }: {
+      token: JWT;
+      user?: User;
+      trigger?: "signIn" | "signUp" | "update";
+      session?: any;
+    }) {
       if (user) {
-        token.id = user.id;
-        token.pseudo = user.pseudo;
-        token.role = user.role;
+        Object.assign(token, {
+          id: user.id,
+          pseudo: user.pseudo,
+          role: user.role,
+        });
+      }
+      if (trigger === "update" && session) {
+        Object.assign<Partial<JWT>, Partial<User>>(token, {
+          name: session.name || token.name,
+          email: session.email || token.email,
+          pseudo: session.pseudo || token.pseudo,
+          image: session.image || token.image,
+          role: session.role || token.role,
+        });
       }
       return token;
     },
@@ -54,8 +76,16 @@ export const authOptions: NextAuthOptions = {
 
           if (!userProfile) throw new Error("Email or password is incorrect");
 
-          const { id, name, pseudo, email, profile_img, password, role, is_active } =
-            userProfile;
+          const {
+            id,
+            name,
+            pseudo,
+            email,
+            profile_img,
+            password,
+            role,
+            is_active,
+          } = userProfile;
 
           const isCorrectPassword = await bcrypt.compare(
             credentials.password,

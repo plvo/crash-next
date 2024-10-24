@@ -1,17 +1,24 @@
+"use client";
+
 import { userGet } from "@/handlers/user.get";
 import { userPostUpdate } from "@/handlers/user.post";
 import { user } from "@prisma/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "./use-toast";
 import { ReturnUser } from "@/types/api";
+import { useSession } from "next-auth/react";
+import { User } from "next-auth";
+import { useRouter } from "next/navigation";
 
 export const useUser = <T extends boolean, U extends boolean>(
   id: string,
   withPublications: T = false as T,
   withAll: U = false as U,
-  onSuccessMut?: () => Promise<void>
+  onSuccessMut?: () => void
 ) => {
   const queryClient = useQueryClient();
+  const router = useRouter();
+  const { update } = useSession();
   const { toast } = useToast();
 
   const {
@@ -33,24 +40,44 @@ export const useUser = <T extends boolean, U extends boolean>(
   });
 
   const {
+    data: newUserData,
     mutateAsync: updateUser,
     isPending: isUpdating,
     isError: isMutError,
     error: mutError,
   } = useMutation({
     mutationFn: async (newData: Partial<user>): Promise<ReturnUser<T, U>> => {
-      const response = await userPostUpdate(
-        id,
-        newData,
-        withPublications,
-        withAll
-      );
+      try {
+        const response = await userPostUpdate(
+          id,
+          newData,
+          withPublications,
+          withAll
+        );
 
-      if (!response.ok) {
-        throw new Error(response.message || "Failed to update profile");
+        if (!response.ok) {
+          throw new Error(response.message || "Failed to update profile");
+        }
+
+        const { email, profile_img: image, name, pseudo, role } = response.data;
+
+        const newSessionData: User = {
+          id,
+          name,
+          email,
+          pseudo,
+          image,
+          role,
+        };
+
+        await update(newSessionData);
+        router.refresh(); // refresh session client side TODO: improve
+
+        return response.data as ReturnUser<T, U>;
+      } catch (error) {
+        console.error("error mutfn", error);
+        throw new Error((error as Error).message);
       }
-
-      return response.data as ReturnUser<T, U>;
     },
     onSuccess: async (updatedUser) => {
       queryClient.setQueryData(["user", id], updatedUser);
@@ -81,6 +108,7 @@ export const useUser = <T extends boolean, U extends boolean>(
       queryError,
     },
     mutation: {
+      newUserData,
       updateUser,
       isUpdating,
       isMutError,
