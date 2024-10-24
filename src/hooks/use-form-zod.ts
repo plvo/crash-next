@@ -16,7 +16,7 @@ export default function useFormZod<
     defaultValues: defaultValues as DefaultValues<z.infer<typeof zodSchema>>,
   });
 
-  const { control, handleSubmit } = form;
+  const { control, handleSubmit, formState } = form;
 
-  return { form, control, handleSubmit };
+  return { form, control, handleSubmit, formState };
 }

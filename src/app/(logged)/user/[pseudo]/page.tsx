@@ -10,12 +10,12 @@ import { useSession } from "next-auth/react";
 
 export default function Page({ params }: { params: { pseudo: string } }) {
   const { pseudo } = params;
+  const sanitizedPseudo = encodeURIComponent(pseudo.toLowerCase());
   const { data: session } = useSession();
-
   const isUserProfile = session?.user.pseudo === pseudo;
 
   const { user, isLoading, isQueryError, queryError } = useUser(
-    pseudo,
+    sanitizedPseudo,
     true,
     isUserProfile
   ).query;

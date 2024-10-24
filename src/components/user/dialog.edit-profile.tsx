@@ -1,7 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
+import { useState } from "react";
 import { $Enums, user } from "@prisma/client";
+import { z } from "zod";
 // import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,15 +15,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { z } from "zod";
 import useFormZod from "@/hooks/use-form-zod";
 import { Form } from "@/components/ui/form";
 import InputField from "@/components/global/form-fields/input.form-field";
 import SelectField from "@/components/global/form-fields/select.form-field";
 import ButtonSubmit from "@/components/global/form-fields/button.submit";
-import { useState } from "react";
-import { SubmitHandler } from "react-hook-form";
 import { useUser } from "@/hooks/use-user";
+import { getChangedFields } from "@/lib/form";
 
 const userSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
@@ -38,23 +38,35 @@ const userSchema = z.object({
   role: z.enum(["USER", "VIP"]),
 });
 
+type UserSchema = z.infer<typeof userSchema>;
+
 export default function DialogEditProfile({ data }: { data: user }) {
   const [open, setOpen] = useState(false);
-  const { form, control, handleSubmit } = useFormZod(userSchema, data);
-
   const roleValues: SelectOption[] = Object.values($Enums.Role).map((role) => ({
     label: role,
     value: role,
   }));
 
-  const { updateUser, isUpdating, isMutError } = useUser(
-    data.id,
-    true,
-    true,
-    () => {
+  const {
+    form,
+    control,
+    handleSubmit,
+    formState,
+  } = useFormZod(userSchema, data);
+
+  const { updateUser, isUpdating } = useUser(data.pseudo, true, true).mutation;
+
+  const onSubmit = async (newData: UserSchema) => {
+    try {
+      if (!formState.isDirty) return; // check if form has been changed
+      const changedFields = getChangedFields(data, newData); // get changed fields
+      if (Object.keys(changedFields).length === 0) return; // check if there are changes
+      await updateUser(changedFields);
       setOpen(false);
+    } catch (error) {
+      console.error(error);
     }
-  ).mutation;
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -63,16 +75,12 @@ export default function DialogEditProfile({ data }: { data: user }) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
-          <form
-            onSubmit={handleSubmit(
-              updateUser as SubmitHandler<z.infer<typeof userSchema>>
-            )}
-          >
+          <form onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
               <DialogTitle>Edit profile</DialogTitle>
               <DialogDescription>
                 Make changes to your profile here. Click save when you&apos;re
-                done. {JSON.stringify(isMutError)}
+                done.
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-4">
@@ -122,7 +130,11 @@ export default function DialogEditProfile({ data }: { data: user }) {
               />
             </div>
             <DialogFooter className="mt-4">
-              <ButtonSubmit label="Edit" disabled={isUpdating} />
+              <ButtonSubmit
+                label="Edit"
+                disabled={!formState.isDirty}
+                loading={isUpdating}
+              />
             </DialogFooter>
           </form>
         </Form>

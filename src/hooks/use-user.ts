@@ -1,17 +1,17 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import type { User } from "next-auth";
+import { useSession } from "next-auth/react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { user } from "@prisma/client";
+import { useToast } from "./use-toast";
 import { userGet } from "@/handlers/user.get";
 import { userPostUpdate } from "@/handlers/user.post";
-import { user } from "@prisma/client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useToast } from "./use-toast";
 import { ReturnUser } from "@/types/api";
-import { useSession } from "next-auth/react";
-import { User } from "next-auth";
-import { useRouter } from "next/navigation";
 
 export const useUser = <T extends boolean, U extends boolean>(
-  id: string,
+  pseudo: string,
   withPublications: T = false as T,
   withAll: U = false as U,
   onSuccessMut?: () => void
@@ -27,14 +27,13 @@ export const useUser = <T extends boolean, U extends boolean>(
     isError: isQueryError,
     error: queryError,
   } = useQuery({
-    queryKey: ["user", id],
+    queryKey: ["user", pseudo],
+    retry: 1,
     queryFn: async () => {
-      const response = await userGet(id, withPublications, withAll, true);
-
+      const response = await userGet(pseudo, withPublications, withAll, true);
       if (!response.ok) {
         throw new Error(response.message || "Failed to fetch user profile");
       }
-
       return response.data as ReturnUser<T, U>;
     },
   });
@@ -48,8 +47,17 @@ export const useUser = <T extends boolean, U extends boolean>(
   } = useMutation({
     mutationFn: async (newData: Partial<user>): Promise<ReturnUser<T, U>> => {
       try {
+        console.log("user", user, newData);
+        console.log(
+          pseudo + " data\n",
+          queryClient.getQueryData(["user", pseudo])
+        );
+        if (!user) {
+          throw new Error("User not found");
+        }
+
         const response = await userPostUpdate(
-          id,
+          user.id,
           newData,
           withPublications,
           withAll
@@ -59,18 +67,28 @@ export const useUser = <T extends boolean, U extends boolean>(
           throw new Error(response.message || "Failed to update profile");
         }
 
-        const { email, profile_img: image, name, pseudo, role } = response.data;
+        const {
+          email,
+          profile_img: image,
+          name,
+          pseudo: newPseudo,
+          role,
+        } = response.data;
 
         const newSessionData: User = {
-          id,
+          id: user.id,
           name,
           email,
-          pseudo,
+          pseudo: newPseudo,
           image,
           role,
         };
 
         await update(newSessionData);
+
+        if (newData.pseudo) {
+          router.push(`/user/${newData.pseudo}`);
+        }
         router.refresh(); // refresh session client side TODO: improve
 
         return response.data as ReturnUser<T, U>;
@@ -80,9 +98,9 @@ export const useUser = <T extends boolean, U extends boolean>(
       }
     },
     onSuccess: async (updatedUser) => {
-      queryClient.setQueryData(["user", id], updatedUser);
-      queryClient.invalidateQueries({ queryKey: ["user", id] });
-      await onSuccessMut?.();
+      queryClient.setQueryData(["user", pseudo], updatedUser);
+      // queryClient.invalidateQueries({queryKey:["user"]});
+      onSuccessMut?.();
       toast({
         title: "Profile updated",
         description: "Your profile has been updated successfully",
