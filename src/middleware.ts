@@ -10,8 +10,9 @@ const NO_AUTH_PATHS = ["/", "/signin"];
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const cors = req.headers.get("Access-Control-Allow-Origin");
-  console.log("cors", cors);
   const token = await getToken({ req });
+
+  console.log({cors, token});
 
   if (!token && !NO_AUTH_PATHS.includes(pathname)) {
     return Response.redirect(absolutePath("/"), 302);

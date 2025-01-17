@@ -23,7 +23,7 @@ function Nav({ sessionUser }: { sessionUser: User }) {
             href="/"
             className=" hover:underline underline-offset-4 font-semibold text-xl"
           >
-            <span className="text-primary">NextCrudStarter</span>
+            <span className="text-primary">next-social-boilerplate</span>
           </Link>
         </div>
 
