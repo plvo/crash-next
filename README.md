@@ -6,9 +6,13 @@ A small social network boilerplate built with next.js, bun, prisma, react-hook-f
   Your browser does not support the video tag.
 </video>
 
-### Used
+## Used
 - next-auth
 - prisma
 - shadcn
 - react-hook-form
 - tanstack-query
+
+## TODO
+ - Write README
+ - Create Account (mail verify, OTP...)
