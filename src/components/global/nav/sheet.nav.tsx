@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { MenuIcon } from 'lucide-react';
 import { LinkSheet } from './link.page';
-import { User } from 'next-auth';
+import type { User } from 'next-auth';
 import ButtonLogout from '@/components/ui/shuip/button.signout';
 import ButtonTheme from '@/components/ui/shuip/button.theme';
 

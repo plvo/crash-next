@@ -8,7 +8,7 @@ import { ButtonSubmit } from '@/components/ui/shuip/button.submit';
 import { Form } from '@/components/ui/form';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
-import useFormZod from '@/hooks/use-form-zod';
+import { useZodForm } from 'shext';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 const signinSchema = z
@@ -24,7 +24,7 @@ export default function FormSignIn() {
   const router = useRouter();
   const { toast } = useToast();
   const [Loading, setLoading] = useState<boolean>(false);
-  const { form, control, handleSubmit } = useFormZod(signinSchema);
+  const { form, control, handleSubmit } = useZodForm(signinSchema);
 
   async function onSubmit(values: z.infer<typeof signinSchema>) {
     try {

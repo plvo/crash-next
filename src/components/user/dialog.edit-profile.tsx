@@ -14,13 +14,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import useFormZod from '@/hooks/use-form-zod';
+import { useZodForm, getChangedFields } from 'shext';
 import { Form } from '@/components/ui/form';
 import InputField from '@/components/ui/shuip/input.form-field';
 import { SelectField } from '@/components/ui/shuip/select.form-field';
 import { ButtonSubmit } from '@/components/ui/shuip/button.submit';
 import { useUser } from '@/hooks/use-user';
-import { getChangedFields } from '@/lib/form';
 
 const userSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters').max(50, 'Name must not exceed 50 characters'),
@@ -43,7 +42,7 @@ export default function DialogEditProfile({ data }: { data: user }) {
     value: role,
   }));
 
-  const { form, control, handleSubmit, formState } = useFormZod(userSchema, data);
+  const { form, control, handleSubmit, formState } = useZodForm(userSchema, data);
 
   const { updateUser, isUpdating } = useUser(data.pseudo, true, true).mutation;
 

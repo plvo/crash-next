@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { User } from 'next-auth';
+import type { User } from 'next-auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { NavSheet } from './sheet.nav';
@@ -16,7 +16,7 @@ function Nav({ sessionUser }: { sessionUser: User }) {
   const pagesList = PAGES_LIST(pseudo, name as string, image as string);
 
   return (
-    <nav className="fixed backdrop-blur-lg top-0 w-full p-4 border-b">
+    <nav className="fixed backdrop-blur-lg top-0 w-full p-4 border-b z-50">
       <div className="container flex items-center justify-between max-w-5xl mx-auto ">
         <div className="flex max-sm:flex-col items-center space-x-2">
           <Link href="/" className=" hover:underline underline-offset-4 font-semibold text-xl">
@@ -43,7 +43,7 @@ function Nav({ sessionUser }: { sessionUser: User }) {
 const NavMargin = ({ sessionUser }: { sessionUser: User }) => (
   <React.Fragment>
     <Nav sessionUser={sessionUser} />
-    <div className="h-16" />
+    <div className="h-24" />
   </React.Fragment>
 );
 
