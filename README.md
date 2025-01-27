@@ -1,4 +1,5 @@
 # next-social-boilerplate
+
 A small social network boilerplate built with next.js, bun, prisma, react-hook-form, next-auth, and shadcn/ui
 
 <video controls>
@@ -7,6 +8,7 @@ A small social network boilerplate built with next.js, bun, prisma, react-hook-f
 </video>
 
 ## Used
+
 - next-auth
 - prisma
 - shadcn
@@ -14,5 +16,6 @@ A small social network boilerplate built with next.js, bun, prisma, react-hook-f
 - tanstack-query
 
 ## TODO
- - Write README
- - Create Account (mail verify, OTP...)
+
+- README
+- Create Account (mail verify, OTP...)

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { ReloadIcon } from "@radix-ui/react-icons";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { HTMLAttributes, MouseEventHandler } from "react";
-import { VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
+import { ReloadIcon } from '@radix-ui/react-icons';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { HTMLAttributes, MouseEventHandler } from 'react';
+import { VariantProps } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -24,14 +24,14 @@ export default function ButtonSubmit({
   label: JSX.Element | string;
   disabled?: boolean;
   loading?: boolean;
-  className?: HTMLAttributes<HTMLButtonElement>["className"];
+  className?: HTMLAttributes<HTMLButtonElement>['className'];
 } & ButtonProps) {
   return (
     <Button
       type="submit"
       onClick={onClick}
       disabled={disabled || loading}
-      className={cn("w-full", className)}
+      className={cn('w-full', className)}
       {...props}
     >
       {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}

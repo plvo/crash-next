@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { PrismaClient } from "@prisma/client";
-import NextAuth, { Session, User, NextAuthOptions } from "next-auth";
-import type { JWT } from "next-auth/jwt";
-import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
+import { PrismaClient } from '@prisma/client';
+import NextAuth, { Session, User, NextAuthOptions } from 'next-auth';
+import type { JWT } from 'next-auth/jwt';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import bcrypt from 'bcrypt';
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: "jwt",
-    maxAge: 2592000 / 3, // 30 days / 3,
+    strategy: 'jwt',
+    maxAge: 60 * 60 * 24 * 30, // 30 days
   },
   pages: {
-    signIn: "/",
+    signIn: '/',
   },
   callbacks: {
     async jwt({
@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
     }: {
       token: JWT;
       user?: User;
-      trigger?: "signIn" | "signUp" | "update";
+      trigger?: 'signIn' | 'signUp' | 'update';
       session?: any;
     }) {
       if (user) {
@@ -33,7 +33,7 @@ export const authOptions: NextAuthOptions = {
           role: user.role,
         });
       }
-      if (trigger === "update" && session) {
+      if (trigger === 'update' && session) {
         Object.assign<Partial<JWT>, Partial<User>>(token, {
           name: session.name || token.name,
           email: session.email || token.email,
@@ -64,7 +64,7 @@ export const authOptions: NextAuthOptions = {
         const prisma = new PrismaClient();
 
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("Please provide email and password");
+          throw new Error('Please provide email and password');
         }
 
         try {
@@ -74,33 +74,21 @@ export const authOptions: NextAuthOptions = {
             },
           });
 
-          if (!userProfile) throw new Error("Email or password is incorrect");
+          if (!userProfile) throw new Error('Email or password is incorrect');
 
-          const {
-            id,
-            name,
-            pseudo,
-            email,
-            profile_img,
-            password,
-            role,
-            is_active,
-          } = userProfile;
+          const { id, name, pseudo, email, profile_img, password, role, is_active } = userProfile;
 
-          const isCorrectPassword = await bcrypt.compare(
-            credentials.password,
-            password
-          );
+          const isCorrectPassword = await bcrypt.compare(credentials.password, password);
 
           if (isCorrectPassword) {
-            if (!is_active) throw new Error("Account is not active");
+            if (!is_active) throw new Error('Account is not active');
 
             return { name, pseudo, email, image: profile_img, id, role };
           }
 
-          throw new Error("Email or password is incorrect");
+          throw new Error('Email or password is incorrect');
         } catch (error: Error | unknown) {
-          console.error("An error occurred:", error);
+          console.error('An error occurred:', error);
           throw new Error(error as string);
         } finally {
           await prisma.$disconnect();

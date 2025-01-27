@@ -1,4 +1,4 @@
-import { user } from "@prisma/client";
+import { user } from '@prisma/client';
 
 interface ApiSuccessResponse<T> {
   ok: true;
@@ -12,8 +12,7 @@ interface ApiErrorResponse {
 
 type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
 
-interface BaseUser
-  extends Omit<user, "password" | "created_at" | "updated_at"> {
+interface BaseUser extends Omit<user, 'password' | 'created_at' | 'updated_at'> {
   publications?: publications[];
 }
 
@@ -28,4 +27,4 @@ type ReturnUser<T extends boolean, U extends boolean> = T extends true
   : BaseUser;
 
 export { ApiErrorResponse, ApiSuccessResponse, ApiResponse };
-export {  ReturnUser, BaseUser, FullUser };
+export { ReturnUser, BaseUser, FullUser };

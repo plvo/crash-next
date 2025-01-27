@@ -80,7 +80,7 @@ body {
 main {
   @apply flex flex-col items-center min-h-screen;
   @apply py-8; /* padding vertical */
-  @apply lg:px-24 max-lg:px-4 max-md:px-2;  /* padding responsive horizontal */
+  @apply lg:px-24 max-lg:px-4 max-md:px-2; /* padding responsive horizontal */
 }
 
 section {

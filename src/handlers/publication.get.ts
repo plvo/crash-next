@@ -1,15 +1,13 @@
-"use server";
+'use server';
 
-import { apiInternalError } from "@/lib/constants";
-import { ApiResponse } from "@/types/api";
-import { PublicationWithAuthor } from "@/types/prisma";
-import { PrismaClient, publications } from "@prisma/client";
+import { apiInternalError } from '@/lib/constants';
+import { ApiResponse } from '@/types/api';
+import { PublicationWithAuthor } from '@/types/prisma';
+import { PrismaClient, publications } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const publicationGet = async (
-  id: string
-): Promise<ApiResponse<publications>> => {
+const publicationGet = async (id: string): Promise<ApiResponse<publications>> => {
   try {
     const publication = await prisma.publications.findUnique({
       where: {
@@ -20,7 +18,7 @@ const publicationGet = async (
     if (!publication) {
       return {
         ok: false,
-        message: "Publication not found",
+        message: 'Publication not found',
       };
     }
 
@@ -33,9 +31,7 @@ const publicationGet = async (
   }
 };
 
-const publicationGetAll = async (): Promise<
-  ApiResponse<PublicationWithAuthor[]>
-> => {
+const publicationGetAll = async (): Promise<ApiResponse<PublicationWithAuthor[]>> => {
   try {
     const publications = await prisma.publications.findMany({
       include: {
@@ -61,9 +57,7 @@ const publicationGetAll = async (): Promise<
   }
 };
 
-const publicationGetByAuthor = async (
-  idOrPseudo: string
-): Promise<ApiResponse<publications[]>> => {
+const publicationGetByAuthor = async (idOrPseudo: string): Promise<ApiResponse<publications[]>> => {
   try {
     const author = await prisma.user.findFirst({
       where: {
@@ -81,7 +75,7 @@ const publicationGetByAuthor = async (
     if (!author) {
       return {
         ok: false,
-        message: "Author not found",
+        message: 'Author not found',
       };
     }
 

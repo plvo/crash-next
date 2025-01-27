@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const getChangedFields = <
-  T extends Record<string, any>,
-  U extends Partial<T>
->(
+const getChangedFields = <T extends Record<string, any>, U extends Partial<T>>(
   oldObject: T,
-  newObject: U
+  newObject: U,
 ): Partial<T> => {
   const changedFields: Partial<T> = {};
 

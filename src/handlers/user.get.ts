@@ -1,9 +1,9 @@
-"use server";
+'use server';
 
-import { apiInternalError } from "@/lib/constants";
-import { ApiResponse, ReturnUser } from "@/types/api";
-import { UserWithPublication } from "@/types/prisma";
-import { PrismaClient, user } from "@prisma/client";
+import { apiInternalError } from '@/lib/constants';
+import { ApiResponse, ReturnUser } from '@/types/api';
+import { UserWithPublication } from '@/types/prisma';
+import { PrismaClient, user } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -41,7 +41,7 @@ const userGet = async <T extends boolean, U extends boolean>(
     }
     return {
       ok: false,
-      message: "user not found",
+      message: 'user not found',
     };
   } catch (error) {
     console.error(error);
@@ -52,7 +52,7 @@ const userGet = async <T extends boolean, U extends boolean>(
 };
 
 const userGetAll = async <T extends boolean>(
-  withPublications?: T
+  withPublications?: T,
 ): Promise<ApiResponse<T extends true ? UserWithPublication[] : user[]>> => {
   try {
     const users = await prisma.user.findMany({

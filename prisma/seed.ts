@@ -1,10 +1,10 @@
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
-import dummy from "./dummy-data.json";
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
+import dummy from './dummy-data.json';
 
 enum Role {
-  USER = "USER",
-  VIP = "VIP",
+  USER = 'USER',
+  VIP = 'VIP',
 }
 
 type DummyUser = {
@@ -30,15 +30,15 @@ type DummyPublication = {
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("Seeding database...");
+  console.log('Seeding database...');
 
   const [deleteOldPublications, deleteOldUsers] = await Promise.all([
     prisma.publications.deleteMany(),
     prisma.user.deleteMany(),
   ]);
 
-  console.log("Deleted " + deleteOldUsers.count + " old users");
-  console.log("Deleted " + deleteOldPublications.count + " old publications");
+  console.log('Deleted ' + deleteOldUsers.count + ' old users');
+  console.log('Deleted ' + deleteOldPublications.count + ' old publications');
 
   const { users, publications } = dummy as {
     users: DummyUser[];
@@ -58,7 +58,7 @@ async function main() {
         },
       });
       return cmd;
-    })
+    }),
   );
 
   const seedPosts = await Promise.all(
@@ -72,12 +72,12 @@ async function main() {
         },
       });
       return cmd;
-    })
+    }),
   );
 
-  console.log("Seed users: ", seedUsers);
-  console.log("Seed posts: ", seedPosts);
-  console.log("Seeding completed!");
+  console.log('Seed users: ', seedUsers);
+  console.log('Seed posts: ', seedPosts);
+  console.log('Seeding completed!');
 }
 
 main()

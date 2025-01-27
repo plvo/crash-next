@@ -1,20 +1,16 @@
-"use client";
+'use client';
 
-import { signOut } from "next-auth/react";
-import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
-import { DialogConfirmation } from "./dialog.confirmation";
+import { signOut } from 'next-auth/react';
+import { Button } from '@/components/ui/button';
+import { LogOut } from 'lucide-react';
+import { DialogConfirmation } from './dialog.confirmation';
 
 export default function ButtonLogout({ withLogo }: { withLogo?: boolean }) {
   return (
     <DialogConfirmation
       trigger={
-        <Button
-          variant="outline"
-          className="text-destructive"
-          size={withLogo ? "icon" : "default"}
-        >
-          {withLogo ? <LogOut /> : "Sign out"}
+        <Button variant="outline" className="text-destructive" size={withLogo ? 'icon' : 'default'}>
+          {withLogo ? <LogOut /> : 'Sign out'}
         </Button>
       }
       title="Sign out"

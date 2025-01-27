@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from '@prisma/client';
 
 type UserWithPublication = Prisma.userGetPayload<{
   include: {
@@ -10,14 +10,14 @@ type PublicationWithAuthor = Prisma.publicationsGetPayload<{
   include: {
     author: {
       select: {
-        id: true,
-        name: true,
-        pseudo: true,
-        email: true,
-        phone: true,
-        role: true,
-        profile_img: true,
-      },
-    },
-  },
+        id: true;
+        name: true;
+        pseudo: true;
+        email: true;
+        phone: true;
+        role: true;
+        profile_img: true;
+      };
+    };
+  };
 }>;

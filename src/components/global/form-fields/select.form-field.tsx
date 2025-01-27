@@ -1,25 +1,12 @@
-"use client";
+'use client';
 
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Control, Path, PathValue } from "react-hook-form";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Control, Path, PathValue } from 'react-hook-form';
 
 const SelectField = <
   TFieldValues extends Record<string, string>,
-  UFieldDefaultValues extends PathValue<TFieldValues, Path<TFieldValues>>
+  UFieldDefaultValues extends PathValue<TFieldValues, Path<TFieldValues>>,
 >({
   control,
   name,

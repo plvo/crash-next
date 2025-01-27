@@ -1,15 +1,8 @@
-"use client";
+'use client';
 
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import type { Control, Path } from "react-hook-form";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import type { Control, Path } from 'react-hook-form';
 
 const InputField = <TFieldValues extends Record<string, string>>({
   control,
@@ -29,7 +22,7 @@ const InputField = <TFieldValues extends Record<string, string>>({
       name={name}
       render={({ field }) => {
         if (!field) {
-          console.error("Field is missing for InputField", name);
+          console.error('Field is missing for InputField', name);
           return <></>;
         }
 

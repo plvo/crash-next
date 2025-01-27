@@ -55,8 +55,8 @@
       "published": false
     },
     {
-        "content": "This is the content of the third post.",
-        "title": "Third Post",
+      "content": "This is the content of the third post.",
+      "title": "Third Post",
       "published": true
     }
   ]

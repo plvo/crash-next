@@ -1,0 +1,15 @@
+# Ignorer les dossiers de build
+node_modules/
+.next/
+out/
+dist/
+
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lock
+
+public
+static
+
+.env*
