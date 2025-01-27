@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import type { JSX } from 'react';
 
 export function DialogConfirmation({
   trigger,

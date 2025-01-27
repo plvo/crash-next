@@ -3,8 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
-import InputField from '@/components/global/form-fields/input.form-field';
-import ButtonSubmit from '@/components/global/form-fields/button.submit';
+import InputField from '@/components/ui/shuip/input.form-field';
+import { ButtonSubmit } from '@/components/ui/shuip/button.submit';
 import { Form } from '@/components/ui/form';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';

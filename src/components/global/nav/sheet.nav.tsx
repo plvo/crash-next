@@ -3,8 +3,8 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { MenuIcon } from 'lucide-react';
 import { LinkSheet } from './link.page';
 import { User } from 'next-auth';
-import ButtonLogout from '@/components/global/button.signout';
-import ButtonTheme from '@/components/global/button.theme';
+import ButtonLogout from '@/components/ui/shuip/button.signout';
+import ButtonTheme from '@/components/ui/shuip/button.theme';
 
 export function NavSheet({
   pathname,

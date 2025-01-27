@@ -16,9 +16,9 @@ import {
 } from '@/components/ui/dialog';
 import useFormZod from '@/hooks/use-form-zod';
 import { Form } from '@/components/ui/form';
-import InputField from '@/components/global/form-fields/input.form-field';
-import SelectField from '@/components/global/form-fields/select.form-field';
-import ButtonSubmit from '@/components/global/form-fields/button.submit';
+import InputField from '@/components/ui/shuip/input.form-field';
+import { SelectField } from '@/components/ui/shuip/select.form-field';
+import { ButtonSubmit } from '@/components/ui/shuip/button.submit';
 import { useUser } from '@/hooks/use-user';
 import { getChangedFields } from '@/lib/form';
 

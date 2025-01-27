@@ -4,10 +4,22 @@ import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessa
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Control, Path, PathValue } from 'react-hook-form';
 
-const SelectField = <
-  TFieldValues extends Record<string, string>,
-  UFieldDefaultValues extends PathValue<TFieldValues, Path<TFieldValues>>,
->({
+export interface SelectOption {
+  value: string;
+  label: string;
+}
+
+export interface SelectFieldProps<T extends Record<string, string>> {
+  control: Control<T>;
+  name: Path<T>;
+  values: SelectOption[];
+  defaultValues?: PathValue<T, Path<T>>;
+  label: string;
+  placeholder: string;
+  description?: string;
+}
+
+export const SelectField = <TFieldValues extends Record<string, string>>({
   control,
   name,
   values,
@@ -15,15 +27,7 @@ const SelectField = <
   label,
   placeholder,
   description,
-}: {
-  control: Control<TFieldValues>;
-  name: Path<TFieldValues>;
-  values: SelectOption[];
-  defaultValues?: UFieldDefaultValues;
-  label: string;
-  placeholder: string;
-  description?: string;
-}) => {
+}: SelectFieldProps<TFieldValues>) => {
   return (
     <FormField
       control={control}
@@ -53,5 +57,3 @@ const SelectField = <
     />
   );
 };
-
-export default SelectField;

@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { NavSheet } from './sheet.nav';
 import { LinkPage } from './link.page';
-import ButtonTheme from '@/components/global/button.theme';
-import ButtonLogout from '@/components/global/button.signout';
+import ButtonTheme from '@/components/ui/shuip/button.theme';
+import ButtonLogout from '@/components/ui/shuip/button.signout';
 import { PAGES_LIST } from '@/lib/constants';
 
 function Nav({ sessionUser }: { sessionUser: User }) {

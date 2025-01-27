@@ -1,5 +1,5 @@
 import { Separator } from '@radix-ui/react-dropdown-menu';
-import { Skeleton } from '../ui/skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function SkeletonUser() {
   return (

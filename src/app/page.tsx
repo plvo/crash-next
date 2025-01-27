@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import ButtonTheme from '@/components/global/button.theme';
+import ButtonTheme from '@/components/ui/shuip/button.theme';
 import { Button } from '@/components/ui/button';
 
 export default function Page() {

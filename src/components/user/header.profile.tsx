@@ -4,7 +4,7 @@ import { user } from '@prisma/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { StarFilledIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
-import HoverItem from '@/components/global/hover.item';
+import HoverItem from '@/components/ui/shuip/hover.item';
 import DialogEditProfile from './dialog.edit-profile';
 import { ReturnUser } from '@/types/api';
 
