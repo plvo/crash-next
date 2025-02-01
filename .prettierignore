@@ -1,4 +1,3 @@
-# Ignorer les dossiers de build
 node_modules/
 .next/
 out/
@@ -8,8 +7,9 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 bun.lock
+bun.lockb
 
-public
-static
+public/
+static/
 
 .env*

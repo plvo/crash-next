@@ -5,7 +5,6 @@
   "author": "https://github.com/plvo",
   "scripts": {
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
