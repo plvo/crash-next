@@ -8,18 +8,14 @@ import { PrismaClient, type User } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const userGet = async <T extends boolean, U extends boolean>(
-  id: string,
+  idOrPseudo: string,
   withPublications?: T,
   withAll?: U,
   withPseudo = false,
 ): Promise<ApiResponse<ReturnUser<T, U>>> => {
   try {
-    console.log(`userGet: ${id}`, withPublications, withAll, withPseudo);
-
     const user = await prisma.user.findUnique({
-      where: {
-        ...(withPseudo ? { pseudo: id } : { id }),
-      },
+      where: withPseudo ? { pseudo: idOrPseudo } : { id: idOrPseudo },
       select: {
         id: true,
         name: true,
@@ -34,8 +30,6 @@ const userGet = async <T extends boolean, U extends boolean>(
         publications: withPublications,
       },
     });
-
-    console.log(`userGet: ${id}`, user);
 
     if (user) {
       return {
