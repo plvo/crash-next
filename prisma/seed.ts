@@ -37,8 +37,8 @@ async function main() {
     prisma.user.deleteMany(),
   ]);
 
-  console.log('Deleted ' + deleteOldUsers.count + ' old users');
-  console.log('Deleted ' + deleteOldPublications.count + ' old publications');
+  console.log(`Deleted ${deleteOldUsers.count} old users`);
+  console.log(`Deleted ${deleteOldPublications.count} old publications`);
 
   const { users, publications } = dummy as {
     users: DummyUser[];

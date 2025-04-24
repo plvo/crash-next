@@ -15,7 +15,7 @@ export default function ListPublications() {
   });
 
   if (!session || isLoading) {
-    return Array.from({ length: 3 }).map((_, index) => <Skeleton key={index} className="w-full h-40 rounded-xl" />);
+    return Array.from({ length: 3 }).map((_, index) => <Skeleton key={index} className='w-full h-40 rounded-xl' />);
   }
 
   if (isError || !data?.ok) {

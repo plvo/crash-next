@@ -1,16 +1,16 @@
+import { Providers } from '@/lib/providers';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import { Providers } from '@/lib/providers';
-import './globals.css';
+import '@/styles/globals.css';
 import { Toaster } from '@/components/ui/toaster';
 
 const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
+  src: '../styles/fonts/GeistVF.woff',
   variable: '--font-geist-sans',
   weight: '100 900',
 });
 const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
+  src: '../styles/fonts/GeistMonoVF.woff',
   variable: '--font-geist-mono',
   weight: '100 900',
 });
@@ -29,9 +29,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang='en'>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Providers attribute="class" enableSystem>
+        <Providers attribute='class' enableSystem>
           <main>{children}</main>
           <Toaster />
         </Providers>

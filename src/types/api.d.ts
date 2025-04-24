@@ -1,4 +1,4 @@
-import { user } from '@prisma/client';
+import type { user } from '@prisma/client';
 
 interface ApiSuccessResponse<T> {
   ok: true;
@@ -26,5 +26,5 @@ type ReturnUser<T extends boolean, U extends boolean> = T extends true
     : BaseUser
   : BaseUser;
 
-export { ApiErrorResponse, ApiSuccessResponse, ApiResponse };
-export { ReturnUser, BaseUser, FullUser };
+export type { ApiErrorResponse, ApiSuccessResponse, ApiResponse };
+export type { ReturnUser, BaseUser, FullUser };

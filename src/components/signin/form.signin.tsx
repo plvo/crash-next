@@ -1,15 +1,15 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useToast } from '@/hooks/use-toast';
-import { z } from 'zod';
-import InputField from '@/components/ui/shuip/input.form-field';
-import { ButtonSubmit } from '@/components/ui/shuip/button.submit';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
+import { ButtonSubmit } from '@/components/ui/shuip/button.submit';
+import InputField from '@/components/ui/shuip/input.form-field';
+import { useToast } from '@/hooks/use-toast';
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useZodForm } from 'shext';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { z } from 'zod';
 
 const signinSchema = z
   .object({
@@ -58,32 +58,32 @@ export default function FormSignIn() {
 
   return (
     <Form {...form}>
-      <Card className="w-full md:w-[600px]">
+      <Card className='w-full md:w-[600px]'>
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardHeader>
-            <CardTitle className="text-2xl md:text-3xl">Sign In</CardTitle>
-            <CardDescription className="text-left">Sign in to your account to continue</CardDescription>
+            <CardTitle className='text-2xl md:text-3xl'>Sign In</CardTitle>
+            <CardDescription className='text-left'>Sign in to your account to continue</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className='space-y-6'>
             <InputField
               control={control}
-              name="email"
-              label="Email"
-              placeholder="johndoe@example.com"
-              type="email"
-              autoComplete="email"
+              name='email'
+              label='Email'
+              placeholder='johndoe@example.com'
+              type='email'
+              autoComplete='email'
             />
             <InputField
               control={control}
-              name="password"
-              label="Password"
-              placeholder="password123"
-              type="password"
-              autoComplete="current-password"
+              name='password'
+              label='Password'
+              placeholder='password123'
+              type='password'
+              autoComplete='current-password'
             />
           </CardContent>
           <CardFooter>
-            <ButtonSubmit label="Sign In" disabled={Loading} />
+            <ButtonSubmit label='Sign In' disabled={Loading} />
           </CardFooter>
         </form>
       </Card>

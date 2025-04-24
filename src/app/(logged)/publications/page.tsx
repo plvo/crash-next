@@ -1,5 +1,5 @@
-import { Metadata } from 'next';
 import ListPublications from '@/components/publications/list-publications';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Publications',

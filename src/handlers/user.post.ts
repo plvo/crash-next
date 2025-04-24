@@ -1,9 +1,9 @@
 'use server';
 
 import { apiInternalError } from '@/lib/constants';
-import { ApiResponse, ReturnUser } from '@/types/api';
+import type { ApiResponse, ReturnUser } from '@/types/api';
 // import { UserWithPublication } from "@/types/prisma";
-import { PrismaClient, user } from '@prisma/client';
+import { PrismaClient, type user } from '@prisma/client';
 
 const prisma = new PrismaClient();
 

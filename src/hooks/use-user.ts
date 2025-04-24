@@ -1,14 +1,14 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import type { User } from 'next-auth';
-import { useSession } from 'next-auth/react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { user } from '@prisma/client';
-import { useToast } from './use-toast';
 import { userGet } from '@/handlers/user.get';
 import { userPostUpdate } from '@/handlers/user.post';
-import { ReturnUser } from '@/types/api';
+import type { ReturnUser } from '@/types/api';
+import type { user } from '@prisma/client';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { User } from 'next-auth';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useToast } from './use-toast';
 
 export const useUser = <T extends boolean, U extends boolean>(
   pseudo: string,
@@ -48,7 +48,7 @@ export const useUser = <T extends boolean, U extends boolean>(
     mutationFn: async (newData: Partial<user>): Promise<ReturnUser<T, U>> => {
       try {
         console.log('user', user, newData);
-        console.log(pseudo + ' data\n', queryClient.getQueryData(['user', pseudo]));
+        console.log(`${pseudo} data\n`, queryClient.getQueryData(['user', pseudo]));
         if (!user) {
           throw new Error('User not found');
         }

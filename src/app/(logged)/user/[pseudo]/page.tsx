@@ -1,13 +1,13 @@
 'use client';
 
-import * as React from 'react';
 import CardPublication from '@/components/publications/card.publication';
+import { Separator } from '@/components/ui/separator';
 import HeaderProfile from '@/components/user/header.profile';
 import SkeletonUser from '@/components/user/skeleton.user';
-import { Separator } from '@/components/ui/separator';
 import { useUser } from '@/hooks/use-user';
-import { publications, user } from '@prisma/client';
+import type { publications, user } from '@prisma/client';
 import { useSession } from 'next-auth/react';
+import * as React from 'react';
 
 export default function Page({ params }: { params: Promise<{ pseudo: string }> }) {
   const { pseudo } = React.use(params);

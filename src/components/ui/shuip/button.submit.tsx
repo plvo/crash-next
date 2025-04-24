@@ -1,7 +1,7 @@
-import { ReloadIcon } from '@radix-ui/react-icons';
-import { Button, ButtonProps } from '@/components/ui/button';
-import type { JSX, MouseEventHandler } from 'react';
+import { Button, type ButtonProps } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { ReloadIcon } from '@radix-ui/react-icons';
+import type { JSX, MouseEventHandler } from 'react';
 
 export interface ButtonSubmitProps {
   onClick?: MouseEventHandler<HTMLButtonElement>;
@@ -13,14 +13,14 @@ export interface ButtonSubmitProps {
 export function ButtonSubmit({ onClick, label, disabled, loading, ...props }: ButtonSubmitProps & ButtonProps) {
   return (
     <Button
-      type="submit"
+      type='submit'
       variant={'default'}
       onClick={onClick}
       disabled={disabled || loading}
       className={cn('w-full', ...(props?.className ? [props.className] : []))}
       {...props}
     >
-      {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+      {loading && <ReloadIcon className='mr-2 h-4 w-4 animate-spin' />}
       {label}
     </Button>
   );

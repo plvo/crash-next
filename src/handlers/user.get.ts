@@ -1,9 +1,9 @@
 'use server';
 
 import { apiInternalError } from '@/lib/constants';
-import { ApiResponse, ReturnUser } from '@/types/api';
-import { UserWithPublication } from '@/types/prisma';
-import { PrismaClient, user } from '@prisma/client';
+import type { ApiResponse, ReturnUser } from '@/types/api';
+import type { UserWithPublication } from '@/types/prisma';
+import { PrismaClient, type user } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -11,7 +11,7 @@ const userGet = async <T extends boolean, U extends boolean>(
   id: string,
   withPublications?: T,
   withAll?: U,
-  withPseudo: boolean = false,
+  withPseudo = false,
 ): Promise<ApiResponse<ReturnUser<T, U>>> => {
   try {
     const user = await prisma.user.findUnique({

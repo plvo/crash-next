@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PrismaClient } from '@prisma/client';
-import NextAuth, { Session, User, NextAuthOptions } from 'next-auth';
+import bcrypt from 'bcrypt';
+import NextAuth, { type Session, type User, type NextAuthOptions } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import bcrypt from 'bcrypt';
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -60,7 +59,7 @@ export const authOptions: NextAuthOptions = {
         email: {},
         password: {},
       },
-      async authorize(credentials, req): Promise<User | null> {
+      async authorize(credentials, _req): Promise<User | null> {
         const prisma = new PrismaClient();
 
         if (!credentials?.email || !credentials?.password) {
@@ -87,7 +86,7 @@ export const authOptions: NextAuthOptions = {
           }
 
           throw new Error('Email or password is incorrect');
-        } catch (error: Error | unknown) {
+        } catch (error) {
           console.error('An error occurred:', error);
           throw new Error(error as string);
         } finally {

@@ -1,5 +1,5 @@
-import type React from 'react';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import type React from 'react';
 
 export default function HoverItem({
   trigger,
@@ -10,8 +10,8 @@ export default function HoverItem({
 }) {
   return (
     <HoverCard>
-      <HoverCardTrigger className="cursor-pointer">{trigger}</HoverCardTrigger>
-      <HoverCardContent className="text-sm w-full">{content}</HoverCardContent>
+      <HoverCardTrigger className='cursor-pointer'>{trigger}</HoverCardTrigger>
+      <HoverCardContent className='text-sm w-full'>{content}</HoverCardContent>
     </HoverCard>
   );
 }

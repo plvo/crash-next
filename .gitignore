@@ -35,3 +35,20 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prisma
+prisma/generated
+prisma/generated/*
+
+# playwright
+playwright-report
+test-results
+
+# terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+*secrets.tfvars
+*secrets.auto.tfvars
+terraform.tfstate.d

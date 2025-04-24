@@ -1,5 +1,5 @@
-import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
+import type { NextRequest } from 'next/server';
 
 const absolutePath = (pathname: string): string => {
   return process.env.APP_URL + pathname;

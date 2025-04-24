@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-import { Heart } from 'lucide-react';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { PublicationWithAuthor } from '@/types/prisma';
-import Link from 'next/link';
-import { publications, user } from '@prisma/client';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import type { PublicationWithAuthor } from '@/types/prisma';
+import type { publications, user } from '@prisma/client';
 import { StarFilledIcon } from '@radix-ui/react-icons';
+import { Heart } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
 
 type PublicationData<T> = T extends PublicationWithAuthor ? T : publications;
 
@@ -39,39 +39,39 @@ export default function CardPublication<T>({
   };
 
   return (
-    <Card className="w-full rounded-xl">
-      <CardContent className="p-4">
-        <div className="flex space-x-4">
-          <Avatar className="w-12 h-12">
-            <AvatarImage src={profile_img} alt={'@' + name} className=" object-cover" />
+    <Card className='w-full rounded-xl'>
+      <CardContent className='p-4'>
+        <div className='flex space-x-4'>
+          <Avatar className='w-12 h-12'>
+            <AvatarImage src={profile_img} alt={`@${name}`} className=' object-cover' />
             <AvatarFallback>JD</AvatarFallback>
           </Avatar>
-          <div className="flex-1 space-y-1">
-            <div className="flex items-center justify-between">
+          <div className='flex-1 space-y-1'>
+            <div className='flex items-center justify-between'>
               <h3 className={`flex items-center gap-1.5 font-semibold ${isVIP ? 'text-yellow-500' : ''}`}>
-                {isVIP && <StarFilledIcon className="text-yellow-500" />}
-                {name} <span className="text-foreground/50">@{pseudo}</span>
+                {isVIP && <StarFilledIcon className='text-yellow-500' />}
+                {name} <span className='text-foreground/50'>@{pseudo}</span>
               </h3>
-              <p className="text-sm text-foreground/50">{created_at.toUTCString()}</p>
+              <p className='text-sm text-foreground/50'>{created_at.toUTCString()}</p>
             </div>
             <h4>{title}</h4>
-            <p className="text-sm text-left">{content}</p>
+            <p className='text-sm text-left'>{content}</p>
           </div>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between items-center px-4 py-3 border-t">
+      <CardFooter className='flex justify-between items-center px-4 py-3 border-t'>
         <Button
-          variant="ghost"
-          size="sm"
-          className="text-foreground/40 hover:text-red-600 transition-colors"
+          variant='ghost'
+          size='sm'
+          className='text-foreground/40 hover:text-red-600 transition-colors'
           onClick={handleLike}
         >
           <Heart className={`w-5 h-5 mr-1 ${isLiked ? 'fill-red-600 text-red-600' : 'fill-none'}`} />
-          <span className="text-sm font-medium">{likes}</span>
-          <span className="sr-only">likes</span>
+          <span className='text-sm font-medium'>{likes}</span>
+          <span className='sr-only'>likes</span>
         </Button>
-        <Link href={'/user/' + pseudo}>
-          <Button variant="outline" className="text-foreground">
+        <Link href={`/user/${pseudo}`}>
+          <Button variant='outline' className='text-foreground'>
             View profile
           </Button>
         </Link>

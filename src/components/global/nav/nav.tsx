@@ -1,14 +1,14 @@
 'use client';
 
-import React from 'react';
+import ButtonLogout from '@/components/ui/shuip/button.signout';
+import ButtonTheme from '@/components/ui/shuip/button.theme';
+import { PAGES_LIST } from '@/lib/constants';
 import type { User } from 'next-auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { NavSheet } from './sheet.nav';
+import React from 'react';
 import { LinkPage } from './link.page';
-import ButtonTheme from '@/components/ui/shuip/button.theme';
-import ButtonLogout from '@/components/ui/shuip/button.signout';
-import { PAGES_LIST } from '@/lib/constants';
+import { NavSheet } from './sheet.nav';
 
 function Nav({ sessionUser }: { sessionUser: User }) {
   const { name, pseudo, image } = sessionUser;
@@ -16,11 +16,11 @@ function Nav({ sessionUser }: { sessionUser: User }) {
   const pagesList = PAGES_LIST(pseudo, name as string, image as string);
 
   return (
-    <nav className="fixed backdrop-blur-lg top-0 w-full p-4 border-b z-50">
-      <div className="container flex items-center justify-between max-w-5xl mx-auto ">
-        <div className="flex max-sm:flex-col items-center space-x-2">
-          <Link href="/" className=" hover:underline underline-offset-4 font-semibold text-xl">
-            <span className="text-primary">next-social-boilerplate</span>
+    <nav className='fixed backdrop-blur-lg top-0 w-full p-4 border-b z-50'>
+      <div className='container flex items-center justify-between max-w-5xl mx-auto '>
+        <div className='flex max-sm:flex-col items-center space-x-2'>
+          <Link href='/' className=' hover:underline underline-offset-4 font-semibold text-xl'>
+            <span className='text-primary'>next-social-boilerplate</span>
           </Link>
         </div>
 
@@ -28,7 +28,7 @@ function Nav({ sessionUser }: { sessionUser: User }) {
         <NavSheet pathname={pathname} sessionUser={sessionUser} PAGES_LIST={pagesList} />
 
         {/* Nav links */}
-        <div className="flex items-center space-x-4 max-md:hidden">
+        <div className='flex items-center space-x-4 max-md:hidden'>
           {pagesList.map((page, index) => (
             <LinkPage key={index} pathname={pathname} pageLink={page} />
           ))}
@@ -43,7 +43,7 @@ function Nav({ sessionUser }: { sessionUser: User }) {
 const NavMargin = ({ sessionUser }: { sessionUser: User }) => (
   <React.Fragment>
     <Nav sessionUser={sessionUser} />
-    <div className="h-24" />
+    <div className='h-24' />
   </React.Fragment>
 );
 
