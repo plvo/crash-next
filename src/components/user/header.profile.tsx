@@ -2,7 +2,7 @@
 
 import HoverItem from '@/components/ui/shuip/hover.item';
 import type { ReturnUser } from '@/types/api';
-import type { user } from '@prisma/client';
+import type { User } from '@prisma/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { StarFilledIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
@@ -15,13 +15,13 @@ export default function HeaderProfile<T extends boolean>({
   data: ReturnUser<true, T>;
   isUserProfile: T;
 }) {
-  const { name, profile_img, role, email, phone } = data;
+  const { name, profileImg, role, email, phone } = data;
 
   return (
     <header className='w-full flex max-md:flex-col items-center justify-between gap-4'>
       <div className='flex max-md:flex-col max-lg:justify-center items-center gap-4'>
         <Avatar>
-          <AvatarImage src={profile_img} className='size-64 rounded-full object-cover' />
+          <AvatarImage src={profileImg} className='size-64 rounded-full object-cover' />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <div className='text-center md:text-start '>
@@ -45,7 +45,7 @@ export default function HeaderProfile<T extends boolean>({
         </div>
       </div>
 
-      {isUserProfile && <DialogEditProfile data={data as user} />}
+      {isUserProfile && <DialogEditProfile data={data as User} />}
     </header>
   );
 }

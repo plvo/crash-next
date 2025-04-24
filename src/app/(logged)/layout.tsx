@@ -1,22 +1,14 @@
-import NavMargin from '@/components/global/nav/nav';
-import { getServerSession } from 'next-auth';
+import Nav from '@/components/shared/nav';
 import React from 'react';
-import { authOptions } from '../api/auth/[...nextauth]/route';
 
-export default async function RootLayout({
+export default function LoggedLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    return null;
-  }
-
   return (
     <React.Fragment>
-      <NavMargin sessionUser={session.user} />
+      <Nav />
       {children}
     </React.Fragment>
   );

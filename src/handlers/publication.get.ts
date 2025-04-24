@@ -3,13 +3,13 @@
 import { apiInternalError } from '@/lib/constants';
 import type { ApiResponse } from '@/types/api';
 import type { PublicationWithAuthor } from '@/types/prisma';
-import { PrismaClient, type publications } from '@prisma/client';
+import { PrismaClient, type Publication } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const publicationGet = async (id: string): Promise<ApiResponse<publications>> => {
+const publicationGet = async (id: string): Promise<ApiResponse<Publication>> => {
   try {
-    const publication = await prisma.publications.findUnique({
+    const publication = await prisma.publication.findUnique({
       where: {
         id,
       },
@@ -33,7 +33,7 @@ const publicationGet = async (id: string): Promise<ApiResponse<publications>> =>
 
 const publicationGetAll = async (): Promise<ApiResponse<PublicationWithAuthor[]>> => {
   try {
-    const publications = await prisma.publications.findMany({
+    const publications = await prisma.publication.findMany({
       include: {
         author: {
           select: {
@@ -43,7 +43,7 @@ const publicationGetAll = async (): Promise<ApiResponse<PublicationWithAuthor[]>
             email: true,
             phone: true,
             role: true,
-            profile_img: true,
+            profileImg: true,
           },
         },
       },
@@ -57,7 +57,7 @@ const publicationGetAll = async (): Promise<ApiResponse<PublicationWithAuthor[]>
   }
 };
 
-const publicationGetByAuthor = async (idOrPseudo: string): Promise<ApiResponse<publications[]>> => {
+const publicationGetByAuthor = async (idOrPseudo: string): Promise<ApiResponse<Publication[]>> => {
   try {
     const author = await prisma.user.findFirst({
       where: {
@@ -79,9 +79,9 @@ const publicationGetByAuthor = async (idOrPseudo: string): Promise<ApiResponse<p
       };
     }
 
-    const publications = await prisma.publications.findMany({
+    const publications = await prisma.publication.findMany({
       where: {
-        author_id: author.id,
+        authorId: author.id,
       },
     });
     return { ok: true, data: publications };

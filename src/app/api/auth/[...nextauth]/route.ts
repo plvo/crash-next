@@ -4,7 +4,7 @@ import NextAuth, { type Session, type User, type NextAuthOptions } from 'next-au
 import type { JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: 'jwt',
@@ -75,14 +75,12 @@ export const authOptions: NextAuthOptions = {
 
           if (!userProfile) throw new Error('Email or password is incorrect');
 
-          const { id, name, pseudo, email, profile_img, password, role, is_active } = userProfile;
+          const { id, name, pseudo, email, profileImg, password, role } = userProfile;
 
           const isCorrectPassword = await bcrypt.compare(credentials.password, password);
 
           if (isCorrectPassword) {
-            if (!is_active) throw new Error('Account is not active');
-
-            return { name, pseudo, email, image: profile_img, id, role };
+            return { name, pseudo, email, image: profileImg, id, role };
           }
 
           throw new Error('Email or password is incorrect');

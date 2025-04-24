@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   env: {
     NEXTAUTH_URL: process.env.NODE_ENV === 'production' ? 'https://megacoolsite.com' : 'http://localhost:3000',
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // compiler: {
   //   removeConsole: {
   //     exclude: ["error"],

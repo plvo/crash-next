@@ -1,31 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, type Role } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import dummy from './dummy-data.json';
-
-enum Role {
-  USER = 'USER',
-  VIP = 'VIP',
-}
-
-type DummyUser = {
-  email: string;
-  password: string;
-  profile_img: string;
-  name: string;
-  phone: string;
-  role: Role;
-  address: string;
-  cp: number;
-  city: string;
-  country: string;
-  is_active: boolean;
-};
-
-type DummyPublication = {
-  title: string;
-  content: string;
-  published: boolean;
-};
 
 const prisma = new PrismaClient();
 
@@ -33,28 +8,25 @@ async function main() {
   console.log('Seeding database...');
 
   const [deleteOldPublications, deleteOldUsers] = await Promise.all([
-    prisma.publications.deleteMany(),
+    prisma.publication.deleteMany(),
     prisma.user.deleteMany(),
   ]);
 
   console.log(`Deleted ${deleteOldUsers.count} old users`);
   console.log(`Deleted ${deleteOldPublications.count} old publications`);
 
-  const { users, publications } = dummy as {
-    users: DummyUser[];
-    publications: DummyPublication[];
-  };
-
   const seedUsers = await Promise.all(
-    users.map(async (user) => {
+    dummy.users.map(async (user) => {
       const salt = await bcrypt.genSalt(10);
       const password = await bcrypt.hash(user.password, salt);
       const cmd = await prisma.user.create({
         data: {
           ...user,
           password,
-          created_at: new Date(),
-          updated_at: new Date(),
+          lastActivity: new Date(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          role: user.role as Role,
         },
       });
       return cmd;
@@ -62,13 +34,15 @@ async function main() {
   );
 
   const seedPosts = await Promise.all(
-    publications.map(async (publications, i) => {
-      const cmd = await prisma.publications.create({
+    dummy.publications.map(async (publication, i) => {
+      const cmd = await prisma.publication.create({
         data: {
-          ...publications,
-          author_id: seedUsers[i].id,
-          created_at: new Date(),
-          updated_at: new Date(),
+          ...publication,
+          authorId: seedUsers[i].id,
+          title: publication.title || 'Default Title', // Ensure title is provided
+          content: publication.content || 'Default Content', // Ensure content is provided
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
       });
       return cmd;

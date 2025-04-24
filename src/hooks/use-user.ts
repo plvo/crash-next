@@ -3,9 +3,9 @@
 import { userGet } from '@/handlers/user.get';
 import { userPostUpdate } from '@/handlers/user.post';
 import type { ReturnUser } from '@/types/api';
-import type { user } from '@prisma/client';
+import type { User } from '@prisma/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { User } from 'next-auth';
+import type { User as AuthUser } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useToast } from './use-toast';
@@ -24,7 +24,6 @@ export const useUser = <T extends boolean, U extends boolean>(
   const {
     data: user,
     isLoading,
-    isError: isQueryError,
     error: queryError,
   } = useQuery({
     queryKey: ['user', pseudo],
@@ -45,10 +44,8 @@ export const useUser = <T extends boolean, U extends boolean>(
     isError: isMutError,
     error: mutError,
   } = useMutation({
-    mutationFn: async (newData: Partial<user>): Promise<ReturnUser<T, U>> => {
+    mutationFn: async (newData: Partial<User>): Promise<ReturnUser<T, U>> => {
       try {
-        console.log('user', user, newData);
-        console.log(`${pseudo} data\n`, queryClient.getQueryData(['user', pseudo]));
         if (!user) {
           throw new Error('User not found');
         }
@@ -59,15 +56,10 @@ export const useUser = <T extends boolean, U extends boolean>(
           throw new Error(response.message || 'Failed to update profile');
         }
 
-        const { email, profile_img: image, name, pseudo: newPseudo, role } = response.data;
-
-        const newSessionData: User = {
+        const newSessionData: Partial<AuthUser> = {
+          ...response.data,
           id: user.id,
-          name,
-          email,
-          pseudo: newPseudo,
-          image,
-          role,
+          image: response.data.profileImg,
         };
 
         await update(newSessionData);
@@ -106,7 +98,6 @@ export const useUser = <T extends boolean, U extends boolean>(
     query: {
       user,
       isLoading,
-      isQueryError,
       queryError,
     },
     mutation: {

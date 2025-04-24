@@ -3,7 +3,7 @@
 import { apiInternalError } from '@/lib/constants';
 import type { ApiResponse, ReturnUser } from '@/types/api';
 import type { UserWithPublication } from '@/types/prisma';
-import { PrismaClient, type user } from '@prisma/client';
+import { PrismaClient, type User } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -14,6 +14,8 @@ const userGet = async <T extends boolean, U extends boolean>(
   withPseudo = false,
 ): Promise<ApiResponse<ReturnUser<T, U>>> => {
   try {
+    console.log(`userGet: ${id}`, withPublications, withAll, withPseudo);
+
     const user = await prisma.user.findUnique({
       where: {
         ...(withPseudo ? { pseudo: id } : { id }),
@@ -25,13 +27,15 @@ const userGet = async <T extends boolean, U extends boolean>(
         email: true,
         phone: true,
         role: true,
-        profile_img: true,
+        profileImg: true,
         password: withAll,
-        created_at: withAll,
-        updated_at: withAll,
+        createdAt: withAll,
+        updatedAt: withAll,
         publications: withPublications,
       },
     });
+
+    console.log(`userGet: ${id}`, user);
 
     if (user) {
       return {
@@ -53,7 +57,7 @@ const userGet = async <T extends boolean, U extends boolean>(
 
 const userGetAll = async <T extends boolean>(
   withPublications?: T,
-): Promise<ApiResponse<T extends true ? UserWithPublication[] : user[]>> => {
+): Promise<ApiResponse<T extends true ? UserWithPublication[] : User[]>> => {
   try {
     const users = await prisma.user.findMany({
       include: {
@@ -62,7 +66,7 @@ const userGetAll = async <T extends boolean>(
     });
     return {
       ok: true,
-      data: users as T extends true ? UserWithPublication[] : user[],
+      data: users as T extends true ? UserWithPublication[] : User[],
     };
   } catch (error) {
     console.error(error);

@@ -1,12 +1,12 @@
 import type { Prisma } from '@prisma/client';
 
-type UserWithPublication = Prisma.userGetPayload<{
+export type UserWithPublication = Prisma.UserGetPayload<{
   include: {
     publications: true;
   };
 }>;
 
-type PublicationWithAuthor = Prisma.publicationsGetPayload<{
+export type PublicationWithAuthor = Prisma.PublicationGetPayload<{
   include: {
     author: {
       select: {
@@ -16,7 +16,7 @@ type PublicationWithAuthor = Prisma.publicationsGetPayload<{
         email: true;
         phone: true;
         role: true;
-        profile_img: true;
+        profileImg: true;
       };
     };
   };

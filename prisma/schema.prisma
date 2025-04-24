@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -18,39 +12,43 @@ enum Role {
   VIP
 }
 
-model user {
-  id       String @id @default(uuid()) @db.Char(36)
-  pseudo   String @unique
-  email    String
-  password String
+model User {
+  id       String @id @default(uuid()) @map("id") @db.Char(36)
+  pseudo   String @unique @map("pseudo")
+  email    String @map("email")
+  password String @map("password")
 
-  profile_img String
+  profileImg String @map("profile_img")
 
-  name  String
-  phone String
-  role  Role   @default(USER)
+  name  String @map("name")
+  phone String @map("phone")
+  role  Role   @default(USER) @map("role")
 
-  address String
-  cp      Int
-  city    String
-  country String
+  address String @map("address")
+  cp      Int    @map("cp")
+  city    String @map("city")
+  country String @map("country")
 
-  is_active   Boolean  @default(true)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  lastActivity DateTime @default(now()) @map("last_activity")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
-  publications publications[]
+  publications Publication[]
+
+  @@map("user")
 }
 
-model publications {
-  id        String   @id @default(uuid()) @db.Char(36)
-  title     String
-  content   String
-  published Boolean  @default(false)
+model Publication {
+  id        String  @id @default(uuid()) @map("id") @db.Char(36)
+  title     String  @map("title")
+  content   String  @map("content")
+  published Boolean @default(false) @map("published")
 
-  author_id String
-  author    user     @relation(fields: [author_id], references: [id])
+  authorId String @map("author_id")
+  author   User   @relation(fields: [authorId], references: [id])
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("publication")
 }

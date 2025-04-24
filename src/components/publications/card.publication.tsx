@@ -4,25 +4,24 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import type { PublicationWithAuthor } from '@/types/prisma';
-import type { publications, user } from '@prisma/client';
+import type { Publication, User } from '@prisma/client';
 import { StarFilledIcon } from '@radix-ui/react-icons';
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
-type PublicationData<T> = T extends PublicationWithAuthor ? T : publications;
+type PublicationData<T> = T extends PublicationWithAuthor ? T : Publication;
 
-export default function CardPublication<T>({
-  data,
-  authorData,
-}: {
+interface CardPublicationProps<T> {
   data: PublicationData<T>;
-  authorData?: T extends PublicationWithAuthor ? never : user;
-}) {
-  const { title, content, created_at } = data;
+  authorData?: T extends PublicationWithAuthor ? never : User;
+}
+
+export default function CardPublication<T>({ data, authorData }: CardPublicationProps<T>) {
+  const { title, content, createdAt } = data;
 
   const author = (data as PublicationWithAuthor).author ?? authorData;
-  const { name, pseudo, profile_img, role } = author;
+  const { name, pseudo, profileImg, role } = author;
   const isVIP = role === 'VIP';
 
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
@@ -43,7 +42,7 @@ export default function CardPublication<T>({
       <CardContent className='p-4'>
         <div className='flex space-x-4'>
           <Avatar className='w-12 h-12'>
-            <AvatarImage src={profile_img} alt={`@${name}`} className=' object-cover' />
+            <AvatarImage src={profileImg} alt={`@${name}`} className=' object-cover' />
             <AvatarFallback>JD</AvatarFallback>
           </Avatar>
           <div className='flex-1 space-y-1'>
@@ -52,7 +51,7 @@ export default function CardPublication<T>({
                 {isVIP && <StarFilledIcon className='text-yellow-500' />}
                 {name} <span className='text-foreground/50'>@{pseudo}</span>
               </h3>
-              <p className='text-sm text-foreground/50'>{created_at.toUTCString()}</p>
+              <p className='text-sm text-foreground/50'>{createdAt.toUTCString()}</p>
             </div>
             <h4>{title}</h4>
             <p className='text-sm text-left'>{content}</p>

@@ -2,14 +2,13 @@
 
 import { apiInternalError } from '@/lib/constants';
 import type { ApiResponse, ReturnUser } from '@/types/api';
-// import { UserWithPublication } from "@/types/prisma";
-import { PrismaClient, type user } from '@prisma/client';
+import { PrismaClient, type User } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 export const userPostUpdate = async <T extends boolean, U extends boolean>(
   id: string,
-  data: Partial<user>,
+  data: Partial<User>,
   withPublications: T = false as T,
   withAll: U = false as U,
 ): Promise<ApiResponse<ReturnUser<T, U>>> => {
@@ -22,7 +21,7 @@ export const userPostUpdate = async <T extends boolean, U extends boolean>(
       },
       data: {
         ...data,
-        updated_at: new Date(),
+        updatedAt: new Date(),
       },
 
       select: {
@@ -32,18 +31,13 @@ export const userPostUpdate = async <T extends boolean, U extends boolean>(
         email: true,
         phone: true,
         role: true,
-        profile_img: true,
+        profileImg: true,
         password: withAll,
-        created_at: withAll,
-        updated_at: withAll,
+        createdAt: withAll,
+        updatedAt: withAll,
         publications: withPublications,
       },
     });
-
-    console.log('withPublications', withPublications);
-    console.log('withAll', withAll);
-    console.log(user);
-
     return {
       ok: true,
       data: user as ReturnUser<T, U>,

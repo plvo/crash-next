@@ -16,7 +16,7 @@ import { ButtonSubmit } from '@/components/ui/shuip/button.submit';
 import InputField from '@/components/ui/shuip/input.form-field';
 import { SelectField } from '@/components/ui/shuip/select.form-field';
 import { useUser } from '@/hooks/use-user';
-import { $Enums, type user } from '@prisma/client';
+import { $Enums, type User } from '@prisma/client';
 import { useState } from 'react';
 import { getChangedFields, useZodForm } from 'shext';
 import { z } from 'zod';
@@ -35,9 +35,9 @@ const userSchema = z.object({
 
 type UserSchema = z.infer<typeof userSchema>;
 
-export default function DialogEditProfile({ data }: { data: user }) {
+export default function DialogEditProfile({ data }: { data: User }) {
   const [open, setOpen] = useState(false);
-  const roleValues: SelectOption[] = Object.values($Enums.Role).map((role) => ({
+  const roleValues = Object.values($Enums.Role).map((role) => ({
     label: role,
     value: role,
   }));

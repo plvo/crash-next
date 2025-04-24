@@ -4,43 +4,40 @@
       "pseudo": "johnwick",
       "email": "john@example.com",
       "password": "password123",
-      "profile_img": "https://s.abcnews.com/images/GMA/john-wick-ht-bb-230216_1676562305682_hpMain_1x1_992.jpg",
+      "profileImg": "https://s.abcnews.com/images/GMA/john-wick-ht-bb-230216_1676562305682_hpMain_1x1_992.jpg",
       "name": "John Doe",
       "phone": "+1234567890",
       "role": "USER",
       "address": "123 Main St",
       "cp": 12345,
       "city": "Anytown",
-      "country": "USA",
-      "is_active": true
+      "country": "USA"
     },
     {
       "pseudo": "judy",
       "email": "judymoncada@example.com",
       "password": "password456",
-      "profile_img": "https://s24193.pcdn.co/wp-content/uploads/2017/03/who-is-judy-moncada-cristina-umana-entity.png",
+      "profileImg": "https://s24193.pcdn.co/wp-content/uploads/2017/03/who-is-judy-moncada-cristina-umana-entity.png",
       "name": "Judy Moncada",
       "phone": "+0987654321",
       "role": "VIP",
       "address": "456 Elm St",
       "cp": 67890,
       "city": "Othertown",
-      "country": "Canada",
-      "is_active": false
+      "country": "Canada"
     },
     {
       "pseudo": "elliot",
       "email": "eliot@example.com",
       "password": "password789",
-      "profile_img": "https://upthrust.co/wp-content/uploads/2019/12/1_Universal-Content-Productions_Mr.-Robot.jpg",
+      "profileImg": "https://upthrust.co/wp-content/uploads/2019/12/1_Universal-Content-Productions_Mr.-Robot.jpg",
       "name": "Elliot Alderson",
       "phone": "+2314859562",
       "role": "VIP",
       "address": "678 Maple St",
       "cp": 67890,
       "city": "Metropolis",
-      "country": "USA",
-      "is_active": false
+      "country": "USA"
     }
   ],
   "publications": [
