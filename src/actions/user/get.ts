@@ -7,15 +7,20 @@ import { PrismaClient, type User } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const userGet = async <T extends boolean, U extends boolean>(
-  idOrPseudo: string,
-  withPublications?: T,
-  withAll?: U,
-  withPseudo = false,
-): Promise<ApiResponse<ReturnUser<T, U>>> => {
+interface GetUserOptions<T extends boolean = false, U extends boolean = false> {
+  idOrPseudo: string;
+  withPublications?: T;
+  withAll?: U;
+}
+
+export const getUser = async <T extends boolean, U extends boolean>({
+  idOrPseudo,
+  withPublications = false as T,
+  withAll = false as U,
+}: GetUserOptions<T, U>): Promise<ApiResponse<ReturnUser<T, U>>> => {
   try {
-    const user = await prisma.user.findUnique({
-      where: withPseudo ? { pseudo: idOrPseudo } : { id: idOrPseudo },
+    const user = await prisma.user.findFirst({
+      where: { OR: [{ id: idOrPseudo }, { pseudo: idOrPseudo }] },
       select: {
         id: true,
         name: true,
@@ -49,7 +54,7 @@ const userGet = async <T extends boolean, U extends boolean>(
   }
 };
 
-const userGetAll = async <T extends boolean>(
+export const getAllUsers = async <T extends boolean>(
   withPublications?: T,
 ): Promise<ApiResponse<T extends true ? UserWithPublication[] : User[]>> => {
   try {
@@ -69,5 +74,3 @@ const userGetAll = async <T extends boolean>(
     await prisma.$disconnect();
   }
 };
-
-export { userGet, userGetAll };

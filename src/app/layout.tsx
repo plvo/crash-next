@@ -2,7 +2,7 @@ import { Providers } from '@/lib/providers';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '@/styles/globals.css';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from 'sonner';
 
 const geistSans = localFont({
   src: '../styles/fonts/GeistVF.woff',

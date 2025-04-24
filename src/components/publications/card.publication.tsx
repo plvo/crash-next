@@ -1,31 +1,44 @@
 'use client';
 
+import { getPublication } from '@/actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import type { PublicationWithAuthor } from '@/types/prisma';
 import type { Publication, User } from '@prisma/client';
 import { StarFilledIcon } from '@radix-ui/react-icons';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
-
-type PublicationData<T> = T extends PublicationWithAuthor ? T : Publication;
+import * as React from 'react';
 
 interface CardPublicationProps<T> {
-  data: PublicationData<T>;
+  initialData: T extends PublicationWithAuthor ? T : Publication;
   authorData?: T extends PublicationWithAuthor ? never : User;
 }
 
-export default function CardPublication<T>({ data, authorData }: CardPublicationProps<T>) {
+export default function CardPublication<T>({ initialData, authorData }: CardPublicationProps<T>) {
+  const { data } = useSuspenseQuery({
+    initialData: initialData as PublicationWithAuthor,
+    queryKey: ['publication', initialData.id],
+    queryFn: async () => {
+      console.log('Fetching publication data...');
+      const res = await getPublication({ id: initialData.id, withAuthor: true });
+      if (!res.ok) {
+        throw new Error(res.message);
+      }
+      return res.data;
+    },
+  });
+
   const { title, content, createdAt } = data;
 
-  const author = (data as PublicationWithAuthor).author ?? authorData;
+  const author = data.author ?? authorData;
   const { name, pseudo, profileImg, role } = author;
   const isVIP = role === 'VIP';
 
-  const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
-  const [isLiked, setIsLiked] = useState(false);
+  const [likes, setLikes] = React.useState(Math.floor(Math.random() * 100));
+  const [isLiked, setIsLiked] = React.useState(false);
 
   const handleLike = () => {
     if (isLiked) {

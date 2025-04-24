@@ -1,4 +1,4 @@
-import FormSignIn from '@/components/signin/form.signin';
+import SigninForm from '@/components/signin/form.signin';
 import type { Metadata } from 'next';
 
 export const generateMetadata = (): Metadata => {
@@ -7,10 +7,10 @@ export const generateMetadata = (): Metadata => {
   };
 };
 
-export default function Page() {
+export default function SigninPage() {
   return (
     <section className='flex items-center justify-center h-[90vh]'>
-      <FormSignIn />
+      <SigninForm />
     </section>
   );
 }

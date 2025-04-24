@@ -1,14 +1,13 @@
 'use client';
 
-import { userGet } from '@/handlers/user.get';
-import { userPostUpdate } from '@/handlers/user.post';
+import { getUser } from '@/actions';
 import type { ReturnUser } from '@/types/api';
 import type { User } from '@prisma/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { User as AuthUser } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useToast } from './use-toast';
+import { toast } from 'sonner';
 
 export const useUser = <T extends boolean, U extends boolean>(
   pseudo: string,
@@ -19,7 +18,6 @@ export const useUser = <T extends boolean, U extends boolean>(
   const queryClient = useQueryClient();
   const router = useRouter();
   const { update } = useSession();
-  const { toast } = useToast();
 
   const {
     data: user,
@@ -29,7 +27,7 @@ export const useUser = <T extends boolean, U extends boolean>(
     queryKey: ['user', pseudo],
     retry: 1,
     queryFn: async () => {
-      const response = await userGet(pseudo, withPublications, withAll, true);
+      const response = await getUser({ idOrPseudo: pseudo, withPublications, withAll });
       if (!response.ok) {
         throw new Error(response.message || 'Failed to fetch user profile');
       }
@@ -50,7 +48,7 @@ export const useUser = <T extends boolean, U extends boolean>(
           throw new Error('User not found');
         }
 
-        const response = await userPostUpdate(user.id, newData, withPublications, withAll);
+        const response = await updateUser(user.id, newData, withPublications, withAll);
 
         if (!response.ok) {
           throw new Error(response.message || 'Failed to update profile');
@@ -79,17 +77,13 @@ export const useUser = <T extends boolean, U extends boolean>(
       queryClient.setQueryData(['user', pseudo], updatedUser);
       // queryClient.invalidateQueries({queryKey:["user"]});
       onSuccessMut?.();
-      toast({
-        title: 'Profile updated',
+      toast.success('Profile updated', {
         description: 'Your profile has been updated successfully',
       });
     },
     onError: (error: Error) => {
-      console.log('error mut', error);
-      toast({
-        title: 'Failed to update profile',
-        variant: 'destructive',
-        description: (error as Error).message || 'An error occurred while updating your profile',
+      toast.error('Profile update failed', {
+        description: error.message || 'Internal server error',
       });
     },
   });

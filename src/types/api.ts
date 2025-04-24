@@ -12,7 +12,7 @@ interface ApiErrorResponse {
 
 type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
 
-interface BaseUser extends Omit<User, 'password' | 'created_at' | 'updated_at'> {
+interface BaseUser extends Omit<User, 'password' | 'createdAt' | 'updatedAt'> {
   publications?: Publication[];
 }
 

@@ -94,7 +94,6 @@ h1 {
 }
 
 p {
-  @apply text-center;
   @apply max-sm:text-sm text-lg;
 }
 

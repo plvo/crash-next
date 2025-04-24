@@ -5,17 +5,22 @@ import type { ReturnUser } from '@/types/api';
 import type { User } from '@prisma/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { StarFilledIcon } from '@radix-ui/react-icons';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import DialogEditProfile from './dialog.edit-profile';
 
-export default function HeaderProfile<T extends boolean>({
-  data,
-  isUserProfile,
-}: {
-  data: ReturnUser<true, T>;
-  isUserProfile: T;
-}) {
-  const { name, profileImg, role, email, phone } = data;
+interface HeaderProfileProps<T extends boolean> {
+  user: ReturnUser<true, T>;
+}
+
+export default function HeaderProfile<T extends boolean>({ user }: HeaderProfileProps<T>) {
+  const { data: session } = useSession();
+  if (!session) {
+    return null;
+  }
+
+  const { name, profileImg, role, email, phone, pseudo } = user;
+  const isUserProfile = session.user.pseudo === pseudo;
 
   return (
     <header className='w-full flex max-md:flex-col items-center justify-between gap-4'>
@@ -24,9 +29,9 @@ export default function HeaderProfile<T extends boolean>({
           <AvatarImage src={profileImg} className='size-64 rounded-full object-cover' />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
-        <div className='text-center md:text-start '>
+        <div className='text-center md:text-start'>
           <h2 className='flex items-center gap-2 text-4xl font-bold'>
-            {name}{' '}
+            {name}
             {role === 'VIP' && (
               <HoverItem
                 trigger={<StarFilledIcon className='text-yellow-500 size-8' />}
@@ -41,11 +46,11 @@ export default function HeaderProfile<T extends boolean>({
           <Link href={`mailto:${email}`} className='link-string text-foreground/50'>
             {email}
           </Link>
-          <p className='md:text-start text-foreground/40'>{phone}</p>
+          <p className='text-foreground/30'>{phone}</p>
         </div>
       </div>
 
-      {isUserProfile && <DialogEditProfile data={data as User} />}
+      {isUserProfile && <DialogEditProfile data={user as User} />}
     </header>
   );
 }

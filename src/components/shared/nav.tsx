@@ -5,7 +5,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import ButtonLogout from '@/components/ui/shuip/button.signout';
 import ButtonTheme from '@/components/ui/shuip/button.theme';
 import { MenuIcon } from 'lucide-react';
-import { useSession } from 'next-auth/react';
+import type { User as AuthUser } from 'next-auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
@@ -18,15 +18,13 @@ interface Page {
   startWith?: string;
 }
 
-export default function Nav() {
+interface NavProps {
+  authUser: AuthUser;
+}
+
+export default function Nav({ authUser }: NavProps) {
   const pathname = usePathname();
-  const { data: session, status } = useSession();
-
-  if (status === 'loading' || !session) {
-    return null;
-  }
-
-  const { name, pseudo, image } = session.user;
+  const { name, pseudo, image } = authUser;
 
   const pages: Page[] = [
     { href: '/', label: 'Home' },

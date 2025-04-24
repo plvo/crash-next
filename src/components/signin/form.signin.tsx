@@ -4,11 +4,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Form } from '@/components/ui/form';
 import { ButtonSubmit } from '@/components/ui/shuip/button.submit';
 import InputField from '@/components/ui/shuip/input.form-field';
-import { useToast } from '@/hooks/use-toast';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { useZodForm } from 'shext';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 const signinSchema = z
@@ -20,15 +19,13 @@ const signinSchema = z
   })
   .strict();
 
-export default function FormSignIn() {
-  const router = useRouter();
-  const { toast } = useToast();
-  const [Loading, setLoading] = useState<boolean>(false);
-  const { form, control, handleSubmit } = useZodForm(signinSchema);
+export default function SigninForm() {
+  const { form, control, handleSubmit, formState } = useZodForm(signinSchema);
+  const route = useRouter();
 
   async function onSubmit(values: z.infer<typeof signinSchema>) {
     try {
-      setLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const response = await signIn('credentials', {
         ...values,
@@ -36,30 +33,23 @@ export default function FormSignIn() {
       });
 
       if (response?.ok) {
-        router.push('/publications');
-        return router.refresh();
+        return route.push('/publications');
       }
 
-      toast({
-        title: 'Sign In Failed',
+      toast.error('Sign In Failed', {
         description: response?.error || 'Internal server error',
-        variant: 'destructive',
       });
     } catch (error) {
-      toast({
-        title: 'Sign In Failed',
+      toast.error('Sign In Failed', {
         description: (error as Error).message || 'Internal server error',
-        variant: 'destructive',
       });
-    } finally {
-      setLoading(false);
     }
   }
 
   return (
     <Form {...form}>
       <Card className='w-full md:w-[600px]'>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit as any)}>
           <CardHeader>
             <CardTitle className='text-2xl md:text-3xl'>Sign In</CardTitle>
             <CardDescription className='text-left'>Sign in to your account to continue</CardDescription>
@@ -83,7 +73,7 @@ export default function FormSignIn() {
             />
           </CardContent>
           <CardFooter>
-            <ButtonSubmit label='Sign In' disabled={Loading} />
+            <ButtonSubmit label='Sign In' disabled={!formState.isDirty} loading={formState.isSubmitting} />
           </CardFooter>
         </form>
       </Card>

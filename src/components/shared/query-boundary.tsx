@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
@@ -6,12 +8,17 @@ import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 
 interface QueryBoundaryProps {
   children: React.ReactNode;
-  loadingFallback: React.ReactNode;
+  loadingFallback?: React.ReactNode;
   errorFallback?: (props: FallbackProps) => React.ReactNode;
   queryKeys?: string[];
 }
 
-export function QueryBoundary({ children, loadingFallback, errorFallback, queryKeys = [] }: QueryBoundaryProps) {
+export function QueryBoundary({
+  children,
+  loadingFallback = 'Loading...',
+  errorFallback,
+  queryKeys = [],
+}: QueryBoundaryProps) {
   return (
     <QueryErrorResetBoundary>
       {({ reset }) => (
