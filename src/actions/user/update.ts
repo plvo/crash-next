@@ -6,7 +6,7 @@ import { PrismaClient, type User } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-interface UpdateUserOptions<T extends boolean, U extends boolean> {
+export interface UpdateUserOptions<T extends boolean, U extends boolean> {
   id: string;
   data: Partial<User>;
   withPublications: T;

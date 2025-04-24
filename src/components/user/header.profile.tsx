@@ -1,6 +1,8 @@
 'use client';
 
+import { getUser } from '@/actions';
 import HoverItem from '@/components/ui/shuip/hover.item';
+import { useActionQuery } from '@/hooks/use-action';
 import type { ReturnUser } from '@/types/api';
 import type { User } from '@prisma/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
@@ -10,10 +12,16 @@ import Link from 'next/link';
 import DialogEditProfile from './dialog.edit-profile';
 
 interface HeaderProfileProps<T extends boolean> {
-  user: ReturnUser<true, T>;
+  initialData: ReturnUser<true, T>;
 }
 
-export default function HeaderProfile<T extends boolean>({ user }: HeaderProfileProps<T>) {
+export default function HeaderProfile<T extends boolean>({ initialData }: HeaderProfileProps<T>) {
+  const { data: user } = useActionQuery({
+    initialData,
+    queryKey: ['user', initialData.id],
+    actionFn: () => getUser({ idOrPseudo: initialData.id, withPublications: true }),
+  });
+
   const { data: session } = useSession();
   if (!session) {
     return null;

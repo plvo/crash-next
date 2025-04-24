@@ -1,3 +1,5 @@
 'use server';
 
-export const createPublication = async () => {};
+import type { ApiResponse } from '@/types/api';
+
+export const createPublication = async (): Promise<ApiResponse<any>> => {};

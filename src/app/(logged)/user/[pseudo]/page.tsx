@@ -27,14 +27,14 @@ export default async function UserPage({ params }: Params) {
 async function UserContent({ pseudo }: { pseudo: string }) {
   const sanitizedPseudo = encodeURIComponent(pseudo.toLowerCase());
 
-  const res = await getUser({ idOrPseudo: sanitizedPseudo, withPublications: true, withAll: false });
+  const res = await getUser({ idOrPseudo: sanitizedPseudo, withPublications: true });
   if (!res.ok) {
     throw new Error(res.message);
   }
 
   return (
     <React.Fragment>
-      <HeaderProfile user={res.data} />
+      <HeaderProfile initialData={res.data} />
       <Separator />
       {res.data.publications?.map((publication: Publication) => (
         <CardPublication key={publication.id} initialData={publication} authorData={res.data as User} />

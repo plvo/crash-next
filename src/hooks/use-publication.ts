@@ -1,68 +1,53 @@
-// "use client";
+'use client';
 
-// import { useRouter } from "next/navigation";
-// import type { User } from "next-auth";
-// import { useSession } from "next-auth/react";
-// import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-// import { user } from "@prisma/client";
-// import { useToast } from "./use-toast";
-// import { userGet } from "@/handlers/user.get";
-// import { userPostUpdate } from "@/handlers/user.post";
-// import { ReturnUser } from "@/types/api";
+import { createPublication, getPublication } from '@/actions';
+import type { PublicationWithAuthor } from '@/types/prisma';
+import type { Publication } from '@prisma/client';
+import { useActionMutation, useActionQuery } from './use-action';
 
-// export const useUser = <T extends boolean, U extends boolean>(
-//   pseudo: string,
-//   withPublications: T = false as T,
-//   withAll: U = false as U,
-//   onSuccessMut?: () => void
-// ) => {
-//   const queryClient = useQueryClient();
-//   const router = useRouter();
-//   const { update } = useSession();
-//   const { toast } = useToast();
+type PublicationData<T extends boolean> = T extends true ? PublicationWithAuthor : Publication;
 
-//   const {
-//     data: newUserData,
-//     mutateAsync: updateUser,
-//     isPending: isUpdating,
-//     isError: isMutError,
-//     error: mutError,
-//   } = useMutation({
-//     mutationFn: async (newData: Partial<user>): Promise<ReturnUser<T, U>> => {
-//       try {
-//       } catch (error) {
-//         console.error("error mutfn", error);
-//         throw new Error((error as Error).message);
-//       }
-//     },
-//     onSuccess: async (updatedUser) => {
-//       queryClient.setQueryData(["user", pseudo], updatedUser);
-//       // queryClient.invalidateQueries({queryKey:["user"]});
-//       onSuccessMut?.();
-//       toast({
-//         title: "Profile updated",
-//         description: "Your profile has been updated successfully",
-//       });
-//     },
-//     onError: (error: Error) => {
-//       console.log("error mut", error);
-//       toast({
-//         title: "Failed to update profile",
-//         variant: "destructive",
-//         description:
-//           (error as Error).message ||
-//           "An error occurred while updating your profile",
-//       });
-//     },
-//   });
+interface UsePublicationOptions<T extends boolean> {
+  id: string;
+  initialData: PublicationData<T>;
+  withAuthor?: T;
+}
 
-//   return {
-//     mutation: {
-//       newUserData,
-//       updateUser,
-//       isUpdating,
-//       isMutError,
-//       mutError,
-//     },
-//   };
-// };
+export function UsePublication<T extends boolean>({
+  id,
+  initialData,
+  withAuthor = false as T,
+}: UsePublicationOptions<T>) {
+  const queryKey = ['publication', id];
+
+  const { data: publication } = useActionQuery<PublicationData<T>>({
+    initialData,
+    queryKey,
+    actionFn: () => getPublication<T>({ id, withAuthor }),
+  });
+
+  const mutation = useActionMutation<PublicationData<T>>({
+    actionFn: createPublication,
+    invalidateQueries: [queryKey],
+    successEvent: {
+      toast: {
+        title: 'Publication created',
+        description: 'Your publication has been created successfully',
+      },
+    },
+    errorEvent: {
+      toast: {
+        title: 'Error creating publication',
+        description: 'An error occurred while creating your publication',
+      },
+    },
+  });
+
+  return {
+    publication,
+    createPublication: mutation.mutate,
+    isLoading: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error,
+  };
+}

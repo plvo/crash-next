@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -44,7 +43,7 @@ export default function DialogEditProfile({ data }: { data: User }) {
 
   const { form, control, handleSubmit, formState } = useZodForm(userSchema, data);
 
-  const { updateUser, isUpdating } = useUser(data.pseudo, true, true).mutation;
+  const { updateUser, isUpdating } = useUser({ id: data.id, withPublications: true, withAll: true });
 
   const onSubmit = async (newData: UserSchema) => {
     try {
@@ -52,7 +51,8 @@ export default function DialogEditProfile({ data }: { data: User }) {
       const changedFields = getChangedFields(data, newData); // get changed fields
       if (Object.keys(changedFields).length === 0) return; // check if there are changes
 
-      await updateUser(changedFields);
+      updateUser(changedFields);
+
       form.reset({ ...data, ...changedFields });
       setOpen(false);
     } catch (error) {
@@ -67,7 +67,7 @@ export default function DialogEditProfile({ data }: { data: User }) {
       </DialogTrigger>
       <DialogContent className='sm:max-w-[425px]'>
         <Form {...form}>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit as any)}>
             <DialogHeader>
               <DialogTitle>Edit profile</DialogTitle>
               <DialogDescription>
