@@ -1,5 +1,6 @@
 import { getUser } from '@/actions';
 import CardPublication from '@/components/publications/card.publication';
+import { QueryBoundary } from '@/components/shared/query-boundary';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import HeaderProfile from '@/components/user/header.profile';
@@ -34,28 +35,42 @@ async function UserContent({ pseudo }: { pseudo: string }) {
 
   return (
     <React.Fragment>
-      <HeaderProfile initialData={res.data} />
+      <QueryBoundary loadingFallback={<SkeletonHeader />}>
+        <HeaderProfile initialData={res.data} />
+      </QueryBoundary>
       <Separator />
-      {res.data.publications?.map((publication: Publication) => (
-        <CardPublication key={publication.id} initialData={publication} authorData={res.data as User} />
-      ))}
+      <QueryBoundary loadingFallback={<SkeletonContent />}>
+        {res.data.publications?.map((publication: Publication) => (
+          <CardPublication key={publication.id} initialData={publication} authorData={res.data as User} />
+        ))}
+      </QueryBoundary>
     </React.Fragment>
   );
+}
+
+function SkeletonHeader() {
+  return (
+    <header className='flex max-md:flex-col max-lg:justify-center items-center gap-4'>
+      <Skeleton className='size-64 rounded-full' />
+      <div className='space-y-2'>
+        <Skeleton className='w-48 h-8' />
+        <Skeleton className='w-40 h-4' />
+        <Skeleton className='w-40 h-4' />
+      </div>
+    </header>
+  );
+}
+
+function SkeletonContent() {
+  return <Skeleton className='w-full h-40 rounded-xl' />;
 }
 
 function SkeletonUser() {
   return (
     <section>
-      <header className='flex max-md:flex-col max-lg:justify-center items-center gap-4'>
-        <Skeleton className='size-64 rounded-full' />
-        <div className='space-y-2'>
-          <Skeleton className='w-48 h-8' />
-          <Skeleton className='w-40 h-4' />
-          <Skeleton className='w-40 h-4' />
-        </div>
-      </header>
+      <SkeletonContent />
       <Separator />
-      <Skeleton className='w-full h-40 rounded-xl' />
+      <SkeletonHeader />
     </section>
   );
 }

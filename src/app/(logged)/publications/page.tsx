@@ -1,5 +1,6 @@
 import { getAllPublications } from '@/actions';
 import CardPublication from '@/components/publications/card.publication';
+import { QueryBoundary } from '@/components/shared/query-boundary';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Metadata } from 'next';
 import React from 'react';
@@ -27,7 +28,13 @@ async function PublicationContent() {
 
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  return res.data.map((publication) => <CardPublication key={publication.id} initialData={publication} />);
+  return (
+    <QueryBoundary loadingFallback={<PublicationSkeleton />}>
+      {res.data.map((publication) => (
+        <CardPublication key={publication.id} initialData={publication} />
+      ))}
+    </QueryBoundary>
+  );
 }
 
 function PublicationSkeleton() {

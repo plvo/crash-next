@@ -8,16 +8,16 @@ import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 
 interface QueryBoundaryProps {
   children: React.ReactNode;
+  queryKeys?: string[];
   loadingFallback?: React.ReactNode;
   errorFallback?: (props: FallbackProps) => React.ReactNode;
-  queryKeys?: string[];
 }
 
 export function QueryBoundary({
   children,
+  queryKeys = [],
   loadingFallback = 'Loading...',
   errorFallback,
-  queryKeys = [],
 }: QueryBoundaryProps) {
   return (
     <QueryErrorResetBoundary>
@@ -40,7 +40,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary, queryKeys = [] }: Fal
     <div className='p-6 rounded-lg border border-destructive/30 bg-destructive/5 flex flex-col items-center justify-center space-y-4 text-center'>
       <AlertTriangle className='text-destructive h-12 w-12' />
       <div>
-        <h3 className='text-lg font-semibold mb-2'>Une erreur est survenue</h3>
+        <h3 className='text-lg font-semibold mb-2'>Oops, something went wrong!</h3>
         <p className='text-muted-foreground'>{error.message || 'Unexpected error'}</p>
         {queryKeys.length > 0 && (
           <p className='text-xs text-muted-foreground mt-2'>

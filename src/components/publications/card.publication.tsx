@@ -1,13 +1,12 @@
 'use client';
 
-import { getPublication } from '@/actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { UsePublicationQuery } from '@/hooks/use-publication';
 import type { PublicationWithAuthor } from '@/types/prisma';
 import type { Publication, User } from '@prisma/client';
 import { StarFilledIcon } from '@radix-ui/react-icons';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
@@ -18,22 +17,15 @@ interface CardPublicationProps<T> {
 }
 
 export default function CardPublication<T>({ initialData, authorData }: CardPublicationProps<T>) {
-  const { data } = useSuspenseQuery({
+  const { data: publication } = UsePublicationQuery({
     initialData: initialData as PublicationWithAuthor,
-    queryKey: ['publication', initialData.id],
-    queryFn: async () => {
-      console.log('Fetching publication data...');
-      const res = await getPublication({ id: initialData.id, withAuthor: true });
-      if (!res.ok) {
-        throw new Error(res.message);
-      }
-      return res.data;
-    },
+    id: initialData.id,
+    withAuthor: true,
   });
 
-  const { title, content, createdAt } = data;
+  const { title, content, createdAt } = publication;
 
-  const author = data.author ?? authorData;
+  const author = publication.author ?? authorData;
   const { name, pseudo, profileImg, role } = author;
   const isVIP = role === 'VIP';
 
@@ -51,7 +43,7 @@ export default function CardPublication<T>({ initialData, authorData }: CardPubl
   };
 
   return (
-    <Card className='w-full rounded-xl'>
+    <Card className='w-full rounded-xl bg-muted-foreground/10 shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out'>
       <CardContent className='p-4'>
         <div className='flex space-x-4'>
           <Avatar className='w-12 h-12'>

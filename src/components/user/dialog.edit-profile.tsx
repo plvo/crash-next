@@ -14,7 +14,7 @@ import { Form } from '@/components/ui/form';
 import { ButtonSubmit } from '@/components/ui/shuip/button.submit';
 import InputField from '@/components/ui/shuip/input.form-field';
 import { SelectField } from '@/components/ui/shuip/select.form-field';
-import { useUser } from '@/hooks/use-user';
+import { useUserMutation } from '@/hooks/use-user';
 import { $Enums, type User } from '@prisma/client';
 import { useState } from 'react';
 import { getChangedFields, useZodForm } from 'shext';
@@ -43,18 +43,20 @@ export default function DialogEditProfile({ data }: { data: User }) {
 
   const { form, control, handleSubmit, formState } = useZodForm(userSchema, data);
 
-  const { updateUser, isUpdating } = useUser({ id: data.id, withPublications: true, withAll: true });
+  const { mutate, isPending } = useUserMutation({
+    invalidateQueries: [['user', data.id]],
+    onSuccess: () => {
+      form.reset();
+      setOpen(false);
+    },
+  });
 
   const onSubmit = async (newData: UserSchema) => {
     try {
       if (!formState.isDirty) return; // check if form has been changed
       const changedFields = getChangedFields(data, newData); // get changed fields
       if (Object.keys(changedFields).length === 0) return; // check if there are changes
-
-      updateUser(changedFields);
-
-      form.reset({ ...data, ...changedFields });
-      setOpen(false);
+      mutate(data.id, changedFields);
     } catch (error) {
       console.error(error);
     }
@@ -117,7 +119,7 @@ export default function DialogEditProfile({ data }: { data: User }) {
               />
             </div>
             <DialogFooter className='mt-4'>
-              <ButtonSubmit label='Edit' disabled={!formState.isDirty} loading={isUpdating} />
+              <ButtonSubmit label='Edit' disabled={!formState.isDirty} loading={isPending} />
             </DialogFooter>
           </form>
         </Form>

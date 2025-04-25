@@ -7,32 +7,35 @@ import { useActionMutation, useActionQuery } from './use-action';
 
 type PublicationData<T extends boolean> = T extends true ? PublicationWithAuthor : Publication;
 
-interface UsePublicationOptions<T extends boolean> {
-  id: string;
-  initialData: PublicationData<T>;
-  withAuthor?: T;
-}
-
-export function UsePublication<T extends boolean>({
+export function UsePublicationQuery<T extends boolean>({
   id,
   initialData,
-  withAuthor = false as T,
-}: UsePublicationOptions<T>) {
-  const queryKey = ['publication', id];
-
-  const { data: publication } = useActionQuery<PublicationData<T>>({
+  withAuthor = false,
+}: QueryHooksOptions<PublicationData<T>>) {
+  return useActionQuery<PublicationData<T>>({
     initialData,
-    queryKey,
+    queryKey: ['publication', id],
     actionFn: () => getPublication<T>({ id, withAuthor }),
   });
+}
 
-  const mutation = useActionMutation<PublicationData<T>>({
+export function usePublicationMutation<T extends boolean>({
+  invalidateQueries,
+  onSuccess,
+  onError,
+}: MutationHooksOptions<Publication>) {
+  return useActionMutation<PublicationData<T>, unknown, Publication>({
     actionFn: createPublication,
-    invalidateQueries: [queryKey],
+    invalidateQueries,
     successEvent: {
       toast: {
         title: 'Publication created',
         description: 'Your publication has been created successfully',
+      },
+      fn: async (data, variables) => {
+        if (!data) return;
+
+        onSuccess?.(data, variables);
       },
     },
     errorEvent: {
@@ -40,14 +43,10 @@ export function UsePublication<T extends boolean>({
         title: 'Error creating publication',
         description: 'An error occurred while creating your publication',
       },
+      fn: (error) => {
+        console.error('Error creating publication:', error);
+        onError?.(error);
+      },
     },
   });
-
-  return {
-    publication,
-    createPublication: mutation.mutate,
-    isLoading: mutation.isPending,
-    isError: mutation.isError,
-    error: mutation.error,
-  };
 }

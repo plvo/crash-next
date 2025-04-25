@@ -5,8 +5,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type UseQueryOptions, useSuspenseQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-type QueryKeyT = string[];
-
 type QuerySuspenseOptions<TData, TError> = Omit<
   UseQueryOptions<ApiResponse<TData>, TError, TData, QueryKeyT>,
   'queryKey' | 'queryFn' | 'select'
@@ -45,15 +43,15 @@ interface Toast {
   description: string;
 }
 
-interface Event {
+interface Event<TData = unknown, TError = unknown, TVariables = unknown> {
   toast?: Toast;
-  fn?: () => void;
+  fn?: (data: TData | TError, variables: TVariables, context: unknown) => void;
 }
 
 interface MutationOptions<TData, TVariables> {
   actionFn: (variables: TVariables) => Promise<ApiResponse<TData>>;
-  successEvent: Event;
-  errorEvent: Event;
+  successEvent: Event<TData, unknown, TVariables>;
+  errorEvent: Event<unknown, unknown, TVariables>;
   invalidateQueries?: QueryKeyT[];
 }
 
@@ -67,7 +65,7 @@ export function useActionMutation<TData = unknown, TError = unknown, TVariables 
 
   return useMutation<ApiResponse<TData>, TError, TVariables>({
     mutationFn: actionFn,
-    onSuccess: async (res, _vars, _context) => {
+    onSuccess: async (res, vars, context) => {
       if (!res.ok) {
         throw new Error(res.message || 'An error occurred');
       }
@@ -78,15 +76,13 @@ export function useActionMutation<TData = unknown, TError = unknown, TVariables 
         });
       }
       if (successEvent?.fn) {
-        successEvent.fn();
+        successEvent.fn(res, vars, context);
       }
       if (res.ok && invalidateQueries.length > 0) {
         await Promise.all(invalidateQueries.map((queryKey) => queryClient.invalidateQueries({ queryKey })));
       }
     },
     onError: (error, vars, context) => {
-      console.error({ error, vars, context });
-
       if (errorEvent?.toast) {
         const { title, description } = errorEvent.toast;
         toast.error(title || 'Error', {
@@ -94,7 +90,7 @@ export function useActionMutation<TData = unknown, TError = unknown, TVariables 
         });
       }
       if (errorEvent?.fn) {
-        errorEvent.fn();
+        errorEvent.fn(error, vars, context);
       }
     },
   });
