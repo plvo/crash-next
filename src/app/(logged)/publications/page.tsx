@@ -1,5 +1,5 @@
 import { getAllPublications } from '@/actions';
-import CardPublication from '@/components/publications/card.publication';
+import PublicationsList from '@/components/shared/publications-list';
 import { QueryBoundary } from '@/components/shared/query-boundary';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Metadata } from 'next';
@@ -28,9 +28,7 @@ async function PublicationContent() {
 
   return (
     <QueryBoundary loadingFallback={<PublicationSkeleton />}>
-      {res.data.map((publication) => (
-        <CardPublication key={publication.id} initialData={publication} />
-      ))}
+      <PublicationsList initialData={res.data} />
     </QueryBoundary>
   );
 }

@@ -74,33 +74,34 @@ export const getAllPublications = async (): Promise<ApiResponse<PublicationWithA
   }
 };
 
-export const getPublicationsByAuthor = async (idOrPseudo: string): Promise<ApiResponse<Publication[]>> => {
+export const getAllPublicationsByAuthor = async (authorId: string): Promise<ApiResponse<PublicationWithAuthor[]>> => {
   try {
-    const author = await prisma.user.findFirst({
+    const publications = await prisma.publication.findMany({
       where: {
-        OR: [
-          {
-            id: idOrPseudo,
+        authorId,
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            pseudo: true,
+            email: true,
+            phone: true,
+            role: true,
+            profileImg: true,
           },
-          {
-            pseudo: idOrPseudo,
-          },
-        ],
+        },
       },
     });
 
-    if (!author) {
+    if (!publications) {
       return {
         ok: false,
-        message: 'Author not found',
+        message: 'Publications not found',
       };
     }
 
-    const publications = await prisma.publication.findMany({
-      where: {
-        authorId: author.id,
-      },
-    });
     return { ok: true, data: publications };
   } catch (error) {
     console.error(error);

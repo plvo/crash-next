@@ -1,8 +1,12 @@
 'use client';
 
-import { createPublication, getPublication } from '@/actions';
+import {
+  type CreatePublicationOptions,
+  createPublication,
+  getAllPublicationsByAuthor,
+  getPublication,
+} from '@/actions';
 import type { PublicationWithAuthor } from '@/types/prisma';
-import type { Publication } from '@prisma/client';
 import { useActionMutation, useActionQuery } from './use-action';
 
 export function UsePublicationQuery({ id, initialData }: QueryHooksOptions<PublicationWithAuthor>) {
@@ -13,10 +17,18 @@ export function UsePublicationQuery({ id, initialData }: QueryHooksOptions<Publi
   });
 }
 
-export function usePublicationMutation({ invalidateQueries, onSuccess, onError }: MutationHooksOptions<Publication>) {
-  return useActionMutation<PublicationWithAuthor, unknown, Publication>({
+export function UsePublicationsQueryByAuthor({ initialData, authorId }: QueryHooksOptions<PublicationWithAuthor[]>) {
+  return useActionQuery({
+    initialData,
+    queryKey: ['publications'],
+    actionFn: () => getAllPublicationsByAuthor(authorId),
+  });
+}
+
+export function useNewPublication({ onSuccess, onError }: MutationHooksOptions<CreatePublicationOptions>) {
+  return useActionMutation<PublicationWithAuthor, unknown, CreatePublicationOptions>({
     actionFn: createPublication,
-    invalidateQueries,
+    invalidateQueries: [['publications']],
     successEvent: {
       toast: {
         title: 'Publication created',
@@ -24,7 +36,6 @@ export function usePublicationMutation({ invalidateQueries, onSuccess, onError }
       },
       fn: async (res, variables) => {
         if (!res) return;
-
         onSuccess?.(res, variables);
       },
     },

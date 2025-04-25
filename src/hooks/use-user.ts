@@ -72,7 +72,7 @@ export function useUserMutation<T extends boolean, U extends boolean>({
   });
 
   // Function to update user profile
-  const updateUserProfile = (id: string, data: Partial<User>) => {
+  const mutate = (id: string, data: Partial<User>) => {
     mutation.mutate({
       id,
       data,
@@ -83,6 +83,6 @@ export function useUserMutation<T extends boolean, U extends boolean>({
 
   return {
     ...mutation,
-    mutate: updateUserProfile,
+    mutate,
   };
 }

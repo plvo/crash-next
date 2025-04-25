@@ -49,6 +49,7 @@ export default function DialogEditProfile({ data }: DialogEditProfileProps) {
   const { form, control, handleSubmit, formState } = useZodForm(userSchema, data);
 
   const { mutate, isPending } = useUserMutation({
+    // invalidateQueries: [['user', data.id], ['publications']],
     invalidateQueries: [['user', data.id], ...(data.publications?.map((p) => ['publication', p.id]) ?? [])],
     onSuccess: (_res, vars) => {
       form.reset({ ...data, ...vars.data });

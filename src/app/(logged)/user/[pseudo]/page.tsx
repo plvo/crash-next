@@ -1,9 +1,12 @@
 import { getUser } from '@/actions';
 import CardPublication from '@/components/publications/card.publication';
+import PublicationsList from '@/components/shared/publications-list';
 import { QueryBoundary } from '@/components/shared/query-boundary';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
+import DialogNewPublication from '@/components/user/dialog-new-publication';
 import HeaderProfile from '@/components/user/header.profile';
+import type { PublicationWithAuthor } from '@/types/prisma';
 import type { Publication } from '@prisma/client';
 import * as React from 'react';
 
@@ -28,10 +31,15 @@ export default async function UserPage({ params }: Params) {
 async function UserContent({ pseudo }: { pseudo: string }) {
   const sanitizedPseudo = encodeURIComponent(pseudo.toLowerCase());
 
-  const res = await getUser({ idOrPseudo: sanitizedPseudo, withPublications: true });
+  const res = await getUser({ idOrPseudo: sanitizedPseudo, withPublications: true, withAll: false });
   if (!res.ok) {
     throw new Error(res.message);
   }
+
+  const initialData: PublicationWithAuthor[] = (res.data.publications || []).map((pub: Publication) => ({
+    ...pub,
+    author: res.data,
+  }));
 
   return (
     <React.Fragment>
@@ -40,9 +48,8 @@ async function UserContent({ pseudo }: { pseudo: string }) {
       </QueryBoundary>
       <Separator />
       <QueryBoundary loadingFallback={<SkeletonContent />}>
-        {res.data.publications?.map((publication: Publication) => (
-          <CardPublication key={publication.id} initialData={{ ...publication, author: res.data }} />
-        ))}
+        <DialogNewPublication data={res.data} />
+        <PublicationsList initialData={initialData} />
       </QueryBoundary>
     </React.Fragment>
   );
