@@ -12,6 +12,6 @@ interface QueryHooksOptions<D> extends AnyObject {
 
 interface MutationHooksOptions<V> extends AnyObject {
   invalidateQueries: QueryKeyT[];
-  onSuccess?: (data: unknown, variables: V) => void;
+  onSuccess?: (res: unknown, variables: V) => void;
   onError?: (error: unknown) => void;
 }

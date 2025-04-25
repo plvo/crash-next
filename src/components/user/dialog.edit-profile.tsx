@@ -15,6 +15,7 @@ import { ButtonSubmit } from '@/components/ui/shuip/button.submit';
 import InputField from '@/components/ui/shuip/input.form-field';
 import { SelectField } from '@/components/ui/shuip/select.form-field';
 import { useUserMutation } from '@/hooks/use-user';
+import type { ReturnUser } from '@/types/api';
 import { $Enums, type User } from '@prisma/client';
 import { useState } from 'react';
 import { getChangedFields, useZodForm } from 'shext';
@@ -34,7 +35,11 @@ const userSchema = z.object({
 
 type UserSchema = z.infer<typeof userSchema>;
 
-export default function DialogEditProfile({ data }: { data: User }) {
+interface DialogEditProfileProps {
+  data: ReturnUser<true, false>;
+}
+
+export default function DialogEditProfile({ data }: DialogEditProfileProps) {
   const [open, setOpen] = useState(false);
   const roleValues = Object.values($Enums.Role).map((role) => ({
     label: role,
@@ -44,9 +49,9 @@ export default function DialogEditProfile({ data }: { data: User }) {
   const { form, control, handleSubmit, formState } = useZodForm(userSchema, data);
 
   const { mutate, isPending } = useUserMutation({
-    invalidateQueries: [['user', data.id]],
-    onSuccess: () => {
-      form.reset();
+    invalidateQueries: [['user', data.id], ...(data.publications?.map((p) => ['publication', p.id]) ?? [])],
+    onSuccess: (_res, vars) => {
+      form.reset({ ...data, ...vars.data });
       setOpen(false);
     },
   });

@@ -7,35 +7,29 @@ import { PrismaClient, type Publication } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-interface GetPublicationOptions<T extends boolean = false> {
+interface GetPublicationOptions {
   id: string;
-  withAuthor?: T;
 }
 
-export const getPublication = async <T extends boolean = false>({
-  id,
-  withAuthor = false as T,
-}: GetPublicationOptions<T>): Promise<ApiResponse<T extends true ? PublicationWithAuthor : Publication>> => {
+export const getPublication = async ({ id }: GetPublicationOptions): Promise<ApiResponse<PublicationWithAuthor>> => {
   try {
     const publication = await prisma.publication.findUnique({
       where: {
         id,
       },
-      include: withAuthor
-        ? {
-            author: {
-              select: {
-                id: true,
-                name: true,
-                pseudo: true,
-                email: true,
-                phone: true,
-                role: true,
-                profileImg: true,
-              },
-            },
-          }
-        : undefined,
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            pseudo: true,
+            email: true,
+            phone: true,
+            role: true,
+            profileImg: true,
+          },
+        },
+      },
     });
 
     if (!publication) {
@@ -45,7 +39,7 @@ export const getPublication = async <T extends boolean = false>({
       };
     }
 
-    return { ok: true, data: publication as T extends true ? PublicationWithAuthor : Publication };
+    return { ok: true, data: publication };
   } catch (error) {
     console.error(error);
     return apiInternalError;

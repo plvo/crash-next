@@ -39,8 +39,8 @@ export function useUserMutation<T extends boolean, U extends boolean>({
         title: 'Profile updated',
         description: 'Your profile has been updated successfully',
       },
-      fn: async (data, variables) => {
-        if (!data) return;
+      fn: async (res, variables) => {
+        if (!res) return;
 
         // Update the session
         await update({
@@ -53,7 +53,7 @@ export function useUserMutation<T extends boolean, U extends boolean>({
           router.push(`/user/${variables.data.pseudo}`);
         }
 
-        onSuccess?.(data, variables);
+        onSuccess?.(res, variables);
       },
     },
     errorEvent: {

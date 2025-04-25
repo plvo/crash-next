@@ -5,14 +5,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 import DialogEditProfile from '@/components/user/dialog.edit-profile';
 import { useUserQuery } from '@/hooks/use-user';
 import type { ReturnUser } from '@/types/api';
-import type { User } from '@prisma/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { StarFilledIcon } from '@radix-ui/react-icons';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 
 interface HeaderProfileProps<T extends boolean> {
-  initialData: ReturnUser<true, T>;
+  initialData: ReturnUser<T, false>;
 }
 
 export default function HeaderProfile<T extends boolean>({ initialData }: HeaderProfileProps<T>) {
@@ -55,7 +54,7 @@ export default function HeaderProfile<T extends boolean>({ initialData }: Header
         </div>
       </div>
 
-      {session ? isUserProfile && <DialogEditProfile data={user as User} /> : <Skeleton className='w-40 h-8' />}
+      {session ? isUserProfile && <DialogEditProfile data={user} /> : <Skeleton className='w-40 h-8' />}
     </header>
   );
 }

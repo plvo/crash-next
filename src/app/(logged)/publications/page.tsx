@@ -26,8 +26,6 @@ async function PublicationContent() {
     throw new Error(res.message);
   }
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
   return (
     <QueryBoundary loadingFallback={<PublicationSkeleton />}>
       {res.data.map((publication) => (

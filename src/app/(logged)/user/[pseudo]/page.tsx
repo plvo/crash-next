@@ -4,7 +4,7 @@ import { QueryBoundary } from '@/components/shared/query-boundary';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import HeaderProfile from '@/components/user/header.profile';
-import type { Publication, User } from '@prisma/client';
+import type { Publication } from '@prisma/client';
 import * as React from 'react';
 
 interface Params {
@@ -41,7 +41,7 @@ async function UserContent({ pseudo }: { pseudo: string }) {
       <Separator />
       <QueryBoundary loadingFallback={<SkeletonContent />}>
         {res.data.publications?.map((publication: Publication) => (
-          <CardPublication key={publication.id} initialData={publication} authorData={res.data as User} />
+          <CardPublication key={publication.id} initialData={{ ...publication, author: res.data }} />
         ))}
       </QueryBoundary>
     </React.Fragment>

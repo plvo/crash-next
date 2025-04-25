@@ -5,37 +5,37 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import ButtonLogout from '@/components/ui/shuip/button.signout';
 import ButtonTheme from '@/components/ui/shuip/button.theme';
 import { MenuIcon } from 'lucide-react';
-import type { User as AuthUser } from 'next-auth';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 import { Avatar, AvatarImage } from '../ui/avatar';
+import { Skeleton } from '../ui/skeleton';
 
 interface Page {
-  href: string;
-  label: string;
+  href?: string;
+  label?: string;
   icon?: React.JSX.Element;
   startWith?: string;
 }
 
-interface NavProps {
-  authUser: AuthUser;
-}
-
-export default function Nav({ authUser }: NavProps) {
+export default function Nav() {
   const pathname = usePathname();
-  const { name, pseudo, image } = authUser;
+  const { data: session } = useSession();
+  const { user } = session || {};
 
   const pages: Page[] = [
     { href: '/', label: 'Home' },
     { href: '/publications', label: 'Publications', startWith: '/publication' },
     {
-      href: `/user/${pseudo}`,
-      label: name,
-      icon: (
+      href: user && `/user/${user.pseudo}`,
+      label: user?.name,
+      icon: user ? (
         <Avatar className='flex items-center'>
-          <AvatarImage src={image} />
+          <AvatarImage src={user.image} />
         </Avatar>
+      ) : (
+        <Skeleton className='size-8 rounded-full' />
       ),
     },
   ];
@@ -43,7 +43,7 @@ export default function Nav({ authUser }: NavProps) {
   return (
     <React.Fragment>
       <nav className='fixed backdrop-blur-lg top-0 w-full p-4 border-b z-50'>
-        <div className='container flex items-center justify-between max-w-5xl mx-auto '>
+        <div className='flex items-center justify-between max-w-5xl mx-auto'>
           <div className='flex max-sm:flex-col items-center space-x-2'>
             <Link href='/' className=' hover:underline underline-offset-4 font-semibold text-xl'>
               <span className='text-primary'>next-social-boilerplate</span>
@@ -51,12 +51,14 @@ export default function Nav({ authUser }: NavProps) {
           </div>
 
           {/* Burger Menu */}
-          <NavSheet pathname={pathname} nameUser={name} pages={pages} />
+          <NavSheet pathname={pathname} nameUser={user?.name} pages={pages} />
 
           {/* Nav links */}
           <div className='flex items-center space-x-4 max-md:hidden'>
-            {pages.map((page) => {
+            {pages.map((page, i) => {
               const { href, label, icon, startWith } = page;
+              if (!href || !label) return <Skeleton key={i} className='w-8 h-8 rounded-full' />;
+
               const isCurrentPage = startWith ? pathname.startsWith(href) : href === pathname;
               const textColor = isCurrentPage ? 'text-primary underline' : 'text-foreground/50';
 
@@ -79,7 +81,7 @@ export default function Nav({ authUser }: NavProps) {
 
 interface NavSheetProps {
   pathname: string;
-  nameUser: string;
+  nameUser?: string;
   pages: Page[];
 }
 
@@ -100,6 +102,8 @@ function NavSheet({ pathname, nameUser, pages }: NavSheetProps) {
           <div className='w-full flex flex-col gap-4'>
             {pages.map((page) => {
               const { href, label } = page;
+              if (!href || !label) return <Skeleton key={label} className='w-8 h-8 rounded-full' />;
+
               const isCurrentPage = href === '/' ? pathname === href : pathname.startsWith(href);
               return (
                 <Link key={href} href={href} className='w-full'>

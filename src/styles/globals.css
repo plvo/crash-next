@@ -78,13 +78,15 @@ body {
 }
 
 main {
-  @apply flex flex-col items-center min-h-screen;
-  @apply lg:px-24 max-lg:px-4 max-md:px-2; /* padding responsive horizontal */
+  @apply min-h-screen; /* minimum height screen */
+  @apply flex flex-col items-center; /* flexbox center */
+  @apply max-lg:px-4 max-md:px-2; /* padding responsive horizontal */
 }
 
 section {
-  @apply w-full md:max-w-6xl lg:max-w-5xl xl:max-w-4xl;
-  @apply space-y-8;
+  @apply w-full md:max-w-6xl lg:max-w-5xl; /* max width */
+  @apply mx-auto; /* margin auto */
+  @apply space-y-8; /* space between elements */
 }
 
 h1 {
