@@ -1,7 +1,7 @@
 'use server';
 
 import { withActionWrapper } from '@/lib/action-wrappers';
-import type { Publication } from '@prisma/client';
+import type { PublicationWithAuthor } from '@/types/prisma';
 
 export interface CreatePublicationOptions {
   authorId: string;
@@ -10,8 +10,8 @@ export interface CreatePublicationOptions {
 }
 
 export const createPublication = async ({ authorId, title, content }: CreatePublicationOptions) => {
-  return withActionWrapper<Publication>(async (prisma) => {
-    const publication = await prisma.publication.create({
+  return withActionWrapper<PublicationWithAuthor>(async (prisma) => {
+    const publication = (await prisma.publication.create({
       data: {
         title,
         content,
@@ -19,7 +19,20 @@ export const createPublication = async ({ authorId, title, content }: CreatePubl
         published: true,
         createdAt: new Date(),
       },
-    });
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            pseudo: true,
+            email: true,
+            phone: true,
+            profileImg: true,
+            role: true,
+          },
+        },
+      },
+    })) satisfies PublicationWithAuthor;
 
     if (publication) {
       return publication;
