@@ -1,10 +1,7 @@
 'use server';
 
-import { apiInternalError } from '@/lib/constants';
-import type { ApiResponse } from '@/types/api';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { withActionWrapper } from '@/lib/action-wrappers';
+import type { Publication } from '@prisma/client';
 
 export interface CreatePublicationOptions {
   authorId: string;
@@ -12,12 +9,8 @@ export interface CreatePublicationOptions {
   content: string;
 }
 
-export const createPublication = async ({
-  authorId,
-  title,
-  content,
-}: CreatePublicationOptions): Promise<ApiResponse<any>> => {
-  try {
+export const createPublication = async ({ authorId, title, content }: CreatePublicationOptions) => {
+  return withActionWrapper<Publication>(async (prisma) => {
     const publication = await prisma.publication.create({
       data: {
         title,
@@ -28,14 +21,10 @@ export const createPublication = async ({
       },
     });
 
-    return {
-      ok: true,
-      data: publication,
-    };
-  } catch (error) {
-    console.error(error);
-    return apiInternalError;
-  } finally {
-    await prisma.$disconnect();
-  }
+    if (publication) {
+      return publication;
+    }
+
+    throw new Error('Publication not created');
+  });
 };

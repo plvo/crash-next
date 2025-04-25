@@ -1,18 +1,14 @@
 'use server';
 
-import { apiInternalError } from '@/lib/constants';
-import type { ApiResponse } from '@/types/api';
+import { withActionWrapper } from '@/lib/action-wrappers';
 import type { PublicationWithAuthor } from '@/types/prisma';
-import { PrismaClient, type Publication } from '@prisma/client';
-
-const prisma = new PrismaClient();
 
 interface GetPublicationOptions {
   id: string;
 }
 
-export const getPublication = async ({ id }: GetPublicationOptions): Promise<ApiResponse<PublicationWithAuthor>> => {
-  try {
+export const getPublication = async ({ id }: GetPublicationOptions) => {
+  return withActionWrapper<PublicationWithAuthor>(async (prisma) => {
     const publication = await prisma.publication.findUnique({
       where: {
         id,
@@ -32,24 +28,16 @@ export const getPublication = async ({ id }: GetPublicationOptions): Promise<Api
       },
     });
 
-    if (!publication) {
-      return {
-        ok: false,
-        message: 'Publication not found',
-      };
+    if (publication) {
+      return publication;
     }
 
-    return { ok: true, data: publication };
-  } catch (error) {
-    console.error(error);
-    return apiInternalError;
-  } finally {
-    await prisma.$disconnect();
-  }
+    throw new Error('Publication not found');
+  });
 };
 
-export const getAllPublications = async (): Promise<ApiResponse<PublicationWithAuthor[]>> => {
-  try {
+export const getAllPublications = async () => {
+  return withActionWrapper<PublicationWithAuthor[]>(async (prisma) => {
     const publications = await prisma.publication.findMany({
       include: {
         author: {
@@ -65,17 +53,13 @@ export const getAllPublications = async (): Promise<ApiResponse<PublicationWithA
         },
       },
     });
-    return { ok: true, data: publications };
-  } catch (error) {
-    console.error(error);
-    return apiInternalError;
-  } finally {
-    await prisma.$disconnect();
-  }
+
+    return publications;
+  });
 };
 
-export const getAllPublicationsByAuthor = async (authorId: string): Promise<ApiResponse<PublicationWithAuthor[]>> => {
-  try {
+export const getAllPublicationsByAuthor = async (authorId: string) => {
+  return withActionWrapper<PublicationWithAuthor[]>(async (prisma) => {
     const publications = await prisma.publication.findMany({
       where: {
         authorId,
@@ -95,18 +79,6 @@ export const getAllPublicationsByAuthor = async (authorId: string): Promise<ApiR
       },
     });
 
-    if (!publications) {
-      return {
-        ok: false,
-        message: 'Publications not found',
-      };
-    }
-
-    return { ok: true, data: publications };
-  } catch (error) {
-    console.error(error);
-    return apiInternalError;
-  } finally {
-    await prisma.$disconnect();
-  }
+    return publications;
+  });
 };

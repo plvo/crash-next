@@ -1,11 +1,9 @@
 'use server';
 
-import { apiInternalError } from '@/lib/constants';
-import type { ApiResponse, ReturnUser } from '@/types/api';
+import { withActionWrapper } from '@/lib/action-wrappers';
+import type { ReturnUser } from '@/types/api';
 import type { UserWithPublication } from '@/types/prisma';
-import { PrismaClient, type User } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import type { User } from '@prisma/client';
 
 interface GetUserOptions<T extends boolean = false, U extends boolean = false> {
   idOrPseudo: string;
@@ -17,8 +15,8 @@ export const getUser = async <T extends boolean, U extends boolean>({
   idOrPseudo,
   withPublications = false as T,
   withAll = false as U,
-}: GetUserOptions<T, U>): Promise<ApiResponse<ReturnUser<T, U>>> => {
-  try {
+}: GetUserOptions<T, U>) => {
+  return withActionWrapper<ReturnUser<T, U>>(async (prisma) => {
     const user = await prisma.user.findFirst({
       where: { OR: [{ id: idOrPseudo }, { pseudo: idOrPseudo }] },
       select: {
@@ -37,40 +35,25 @@ export const getUser = async <T extends boolean, U extends boolean>({
     });
 
     if (user) {
-      return {
-        ok: true,
-        data: user as ReturnUser<T, U>,
-      };
+      return user as ReturnUser<T, U>;
     }
-    return {
-      ok: false,
-      message: 'user not found',
-    };
-  } catch (error) {
-    console.error(error);
-    return apiInternalError;
-  } finally {
-    await prisma.$disconnect();
-  }
+
+    throw new Error('User not found');
+  });
 };
 
-export const getAllUsers = async <T extends boolean>(
-  withPublications?: T,
-): Promise<ApiResponse<T extends true ? UserWithPublication[] : User[]>> => {
-  try {
+export const getAllUsers = async <T extends boolean>(withPublications?: T) => {
+  return withActionWrapper<T extends true ? UserWithPublication[] : User[]>(async (prisma) => {
     const users = await prisma.user.findMany({
       include: {
         publications: withPublications as boolean,
       },
     });
-    return {
-      ok: true,
-      data: users as T extends true ? UserWithPublication[] : User[],
-    };
-  } catch (error) {
-    console.error(error);
-    return apiInternalError;
-  } finally {
-    await prisma.$disconnect();
-  }
+
+    if (users.length > 0) {
+      return users as T extends true ? UserWithPublication[] : User[];
+    }
+
+    throw new Error('No users found');
+  });
 };
