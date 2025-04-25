@@ -1,5 +1,6 @@
 'use client';
 
+import { updateUser } from '@/actions';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -14,11 +15,12 @@ import { Form } from '@/components/ui/form';
 import { ButtonSubmit } from '@/components/ui/shuip/button.submit';
 import InputField from '@/components/ui/shuip/input.form-field';
 import { SelectField } from '@/components/ui/shuip/select.form-field';
+import { useFormSubmit } from '@/hooks/use-form-submit';
 import { useUserMutation } from '@/hooks/use-user';
 import type { ReturnUser } from '@/types/api';
-import { $Enums, type User } from '@prisma/client';
-import { useState } from 'react';
-import { getChangedFields, useZodForm } from 'shext';
+import { $Enums } from '@prisma/client';
+import * as React from 'react';
+import { useZodForm } from 'shext';
 import { z } from 'zod';
 
 const userSchema = z.object({
@@ -40,7 +42,7 @@ interface DialogEditProfileProps {
 }
 
 export default function DialogEditProfile({ data }: DialogEditProfileProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = React.useState(false);
   const roleValues = Object.values($Enums.Role).map((role) => ({
     label: role,
     value: role,
@@ -49,7 +51,6 @@ export default function DialogEditProfile({ data }: DialogEditProfileProps) {
   const { form, control, handleSubmit, formState } = useZodForm(userSchema, data);
 
   const { mutate, isPending } = useUserMutation({
-    // invalidateQueries: [['user', data.id], ['publications']],
     invalidateQueries: [['user', data.id], ...(data.publications?.map((p) => ['publication', p.id]) ?? [])],
     onSuccess: (_res, vars) => {
       form.reset({ ...data, ...vars.data });
@@ -57,16 +58,10 @@ export default function DialogEditProfile({ data }: DialogEditProfileProps) {
     },
   });
 
-  const onSubmit = async (newData: UserSchema) => {
-    try {
-      if (!formState.isDirty) return; // check if form has been changed
-      const changedFields = getChangedFields(data, newData); // get changed fields
-      if (Object.keys(changedFields).length === 0) return; // check if there are changes
-      mutate(data.id, changedFields);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const onSubmit = useFormSubmit<ReturnUser<true, false>, UserSchema>({
+    originalData: data,
+    onSubmit: (changedFields) => mutate(data.id, changedFields),
+  });
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

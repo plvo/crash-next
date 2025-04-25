@@ -1,6 +1,6 @@
 'use server';
 
-import { withActionWrapper } from '@/lib/action-wrappers';
+import { createAction, withActionWrapper } from '@/lib/action-wrappers';
 import type { ReturnUser } from '@/types/api';
 import type { UserWithPublication } from '@/types/prisma';
 import type { User } from '@prisma/client';

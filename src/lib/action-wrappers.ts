@@ -12,29 +12,45 @@ export async function withActionWrapper<T>(action: (prisma: PrismaClient) => Pro
     const data = await action(prisma);
     return { ok: true, data };
   } catch (error) {
-    console.error('Database operation failed:', error);
+    console.error('[WITHACTIONWRAPPER] Error:', {
+      error,
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString(),
+    });
 
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (error.code) {
-        case 'P2002':
-          return { ok: false, message: 'Unique constraint violation' };
-        case 'P2025':
-          return { ok: false, message: 'Record not found' };
-        default:
-          return { ok: false, message: `Database error: ${error.code}` };
-      }
-    }
+    const message = getMessageError(error);
 
-    if (error instanceof Prisma.PrismaClientValidationError) {
-      return { ok: false, message: 'Validation error' };
-    }
-
-    if (error instanceof Error) {
-      return { ok: false, message: error.message };
-    }
-
-    return { ok: false, message: 'Internal Server Error' };
+    return { ok: false, message };
   } finally {
     await prisma.$disconnect();
   }
 }
+
+const getMessageError = (error: unknown): string => {
+  // Handle specific Prisma errors
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    switch (error.code) {
+      case 'P2002':
+        return `Unique constraint violation: ${error.meta?.target}`;
+      case 'P2025':
+        return 'Record not found';
+      default:
+        return `Database error: ${error.code}`;
+    }
+  }
+  if (error instanceof Prisma.PrismaClientValidationError) {
+    return 'Validation error';
+  }
+  if (error instanceof Prisma.PrismaClientRustPanicError) {
+    return `Rust panic error: ${error.cause}`;
+  }
+  if (error instanceof Prisma.PrismaClientInitializationError) {
+    return `Initialization error: ${error.message}`;
+  }
+  if (error instanceof Prisma.PrismaClientUnknownRequestError) {
+    return `Unknown request error: ${error.message}`;
+  }
+
+  // Handle other errors
+  return error instanceof Error ? error.message : 'Internal Server Error';
+};

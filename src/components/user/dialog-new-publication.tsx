@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -12,10 +11,11 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Form } from '@/components/ui/form';
+import { useFormSubmit } from '@/hooks/use-form-submit';
 import { useNewPublication } from '@/hooks/use-publication';
 import type { BaseUser } from '@/types/api';
 import { useState } from 'react';
-import { getChangedFields, useZodForm } from 'shext';
+import { useZodForm } from 'shext';
 import { z } from 'zod';
 import { ButtonSubmit } from '../ui/shuip/button.submit';
 import InputField from '../ui/shuip/input.form-field';
@@ -45,16 +45,13 @@ export default function DialogNewPublication({ data }: DialogPostPublicationProp
     },
   });
 
-  const onSubmit = async (newPublication: TitleSchema) => {
-    try {
-      if (!formState.isDirty) return; // check if form has been changed
-      const changedFields = getChangedFields(data, newPublication as any); // get changed fields
-      if (Object.keys(changedFields).length === 0) return; // check if there are changes
-      mutate({ ...newPublication, authorId: data.id });
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const onSubmit = useFormSubmit<BaseUser, TitleSchema>({
+    originalData: data,
+    onSubmit: (changedFields) => {
+      const { title = '', content = '' } = changedFields;
+      mutate({ title, content, authorId: data.id });
+    },
+  });
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
