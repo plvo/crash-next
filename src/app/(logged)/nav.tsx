@@ -9,8 +9,8 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
-import { Avatar, AvatarImage } from '../ui/avatar';
-import { Skeleton } from '../ui/skeleton';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface Page {
   href?: string;

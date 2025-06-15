@@ -1,6 +1,6 @@
 import { getAllPublications } from '@/actions';
-import PublicationsList from '@/components/shared/publications-list';
-import { QueryBoundary } from '@/components/shared/query-boundary';
+import PublicationsList from '@/components/publications-list';
+import { QueryBoundary } from '@/components/query-boundary';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Metadata } from 'next';
 import React from 'react';

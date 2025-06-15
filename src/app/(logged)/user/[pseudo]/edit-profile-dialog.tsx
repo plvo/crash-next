@@ -37,11 +37,11 @@ const userSchema = z.object({
 
 type UserSchema = z.infer<typeof userSchema>;
 
-interface DialogEditProfileProps {
+interface EditProfileDialogProps {
   data: ReturnUser<true, false>;
 }
 
-export default function DialogEditProfile({ data }: DialogEditProfileProps) {
+export default function EditProfileDialog({ data }: EditProfileDialogProps) {
   const [open, setOpen] = React.useState(false);
   const roleValues = Object.values($Enums.Role).map((role) => ({
     label: role,

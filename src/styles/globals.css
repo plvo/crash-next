@@ -92,7 +92,6 @@ section {
 h1 {
   @apply font-bold text-center; /* bold text */
   @apply text-4xl max-sm:text-2xl max-md:text-3xl; /* responsive text size */
-  @apply mb-8; /* margin bottom */
 }
 
 p {

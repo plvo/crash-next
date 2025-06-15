@@ -2,7 +2,6 @@
 
 import HoverItem from '@/components/ui/shuip/hover.item';
 import { Skeleton } from '@/components/ui/skeleton';
-// import DialogEditProfile from '@/components/user/dialog.edit-profile';
 import { useUserQuery } from '@/hooks/use-user';
 import type { ReturnUser } from '@/types/api';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
@@ -11,7 +10,7 @@ import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
-const DialogEditProfile = dynamic(() => import('./dialog.edit-profile'), {
+const DialogEditProfile = dynamic(() => import('./edit-profile-dialog'), {
   loading: () => <Skeleton className='w-32 h-10' />,
 });
 

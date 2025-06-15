@@ -1,4 +1,4 @@
-import SigninForm from '@/components/signin/form.signin';
+import SigninForm from '@/app/(auth)/signin/signin-form';
 import type { Metadata } from 'next';
 
 export const generateMetadata = (): Metadata => {

@@ -1,11 +1,10 @@
 import { getUser } from '@/actions';
-import CardPublication from '@/components/publications/card.publication';
-import PublicationsList from '@/components/shared/publications-list';
-import { QueryBoundary } from '@/components/shared/query-boundary';
+import PublicationsList from '@/components/publications-list';
+import { QueryBoundary } from '@/components/query-boundary';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
-import DialogNewPublication from '@/components/user/dialog-new-publication';
-import HeaderProfile from '@/components/user/header.profile';
+import NewPublicationDialog from './new-publication-dialog';
+import HeaderProfile from '@/app/(logged)/user/[pseudo]/header-profile';
 import type { PublicationWithAuthor } from '@/types/prisma';
 import type { Publication } from '@prisma/client';
 import * as React from 'react';
@@ -48,7 +47,7 @@ async function UserContent({ pseudo }: { pseudo: string }) {
       </QueryBoundary>
       <Separator />
       <QueryBoundary loadingFallback={<SkeletonContent />}>
-        <DialogNewPublication data={res.data} />
+        <NewPublicationDialog data={res.data} />
         <PublicationsList initialData={initialData} />
       </QueryBoundary>
     </React.Fragment>
