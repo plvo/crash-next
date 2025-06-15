@@ -1,4 +1,4 @@
-import Nav from '@/components/shared/nav';
+import Nav from '@/app/(logged)/nav';
 import React from 'react';
 
 export default async function LoggedLayout({

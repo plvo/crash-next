@@ -17,9 +17,9 @@ import type { BaseUser } from '@/types/api';
 import { useState } from 'react';
 import { useZodForm } from 'shext';
 import { z } from 'zod';
-import { ButtonSubmit } from '../ui/shuip/button.submit';
-import InputField from '../ui/shuip/input.form-field';
-import TextareaField from '../ui/shuip/textarea-field';
+import { ButtonSubmit } from '../../../../components/ui/shuip/button.submit';
+import InputField from '../../../../components/ui/shuip/input.form-field';
+import TextareaField from '../../../../components/ui/shuip/textarea-field';
 
 const titleSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters').max(50, 'Title must not exceed 50 characters'),
@@ -28,11 +28,11 @@ const titleSchema = z.object({
 
 type TitleSchema = z.infer<typeof titleSchema>;
 
-interface DialogPostPublicationProps {
+interface NewPublicationDialogProps {
   data: BaseUser;
 }
 
-export default function DialogNewPublication({ data }: DialogPostPublicationProps) {
+export default function NewPublicationDialog({ data }: NewPublicationDialogProps) {
   const [open, setOpen] = useState(false);
 
   const { form, control, handleSubmit, formState } = useZodForm(titleSchema, data);

@@ -1,15 +1,17 @@
 import { Button } from '@/components/ui/button';
 import ButtonTheme from '@/components/ui/shuip/button.theme';
+import { GithubIcon } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Page() {
   return (
     <section className='h-[90vh] flex flex-col items-center justify-center'>
-      <div className='space-y-2 text-center'>
-        <h1 className='font-th'>Welcome to your new boilerplate project!</h1>
-        <p className='font-thin opacity-75'>
-          This template serves as a starting point for your new project. It includes a basic layout, authentication,
-          (dynamic) routing, and other key features.
+      <div className='text-center space-y-4'>
+        <h1>
+          Welcome to <code className='bg-muted px-1.5 py-0.5 rounded-md'>crash-next</code>
+        </h1>
+        <p className='font-thin text-muted-foreground'>
+          An evolving Next.js template for experimenting with up-to-date practices and technologies.
         </p>
       </div>
 
@@ -18,19 +20,12 @@ export default function Page() {
           <Button>/signin page</Button>
         </Link>
         <ButtonTheme />
-      </div>
-
-      <footer className='relative w-full text-center'>
-        <p className='text-foreground/50'>
-          Made with <span className='text-foreground'>❤️</span> by{' '}
-          <Link href={'https://github.com/plvo'} className='text-foreground hover:underline underline-offset-2'>
-            plvo
-          </Link>
-        </p>
-        <Link href={'https://github.com/plvo/next-social-boilerplate'}>
-          <Button variant={'link'}>Github Repository</Button>
+        <Link href={'https://github.com/plvo/crash-next'}>
+          <Button size={'icon'} variant={'outline'}>
+            <GithubIcon className='size-4' />
+          </Button>
         </Link>
-      </footer>
+      </div>
     </section>
   );
 }

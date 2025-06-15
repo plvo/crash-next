@@ -1,6 +1,6 @@
 export default function Page() {
   return (
-    <main className=' justify-center h-full'>
+    <main className='justify-center h-full'>
       <div>
         <h1>404 - Page not found</h1>
         <p>
